@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public class VectorN : IEquatable<VectorN>
@@ -121,6 +123,7 @@ namespace Geometry
         /// <summary>
         /// Returns the dot product of this vector with <paramref name="v"/>. Throws <see cref="InvalidOperationException"/> if the vectors have different dimensions.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Dot(VectorN v)
         {
             return Dot(this, v);
@@ -135,8 +138,8 @@ namespace Geometry
             if (ReferenceEquals(this, obj)) return true;
             if (GetType() != obj.GetType()) return false;
 
-            var new_obj = (VectorN)obj;
-            return Equals(new_obj);
+            var newObj = (VectorN)obj;
+            return Equals(newObj);
         }
 
         /// <summary>
@@ -175,6 +178,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if both vectors are null, or have the same dimension and equal components.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(VectorN a, VectorN b)
         {
             if (a is null)
@@ -186,6 +190,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if exactly one vector is null, or their dimensions or components differ.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(VectorN a, VectorN b) => !(a == b);
 
         /// <summary>

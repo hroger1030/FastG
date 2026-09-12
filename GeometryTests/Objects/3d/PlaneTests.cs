@@ -72,6 +72,3 @@ namespace GeometryTests
         }
     }
 }
-
-
-

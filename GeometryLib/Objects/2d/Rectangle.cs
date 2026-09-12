@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -138,26 +139,20 @@ namespace Geometry
         /// <summary>
         /// Returns true if <paramref name="point"/> lies inside or on the edges of this rectangle.
         /// </summary>
-        public bool Contains(Point2 point)
-        {
-            return Contains(point.X, point.Y);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point2 point) => Collisions2d.Contains(this, point);
 
         /// <summary>
         /// Returns true if (<paramref name="x"/>, <paramref name="y"/>) lies inside or on the edges of this rectangle.
         /// </summary>
-        public bool Contains(float x, float y)
-        {
-            return x >= Left && x <= Right && y >= Top && y <= Bottom;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(float x, float y) => Contains(new Point2(x, y));
 
         /// <summary>
         /// Returns true if <paramref name="value"/> lies entirely inside or on the edges of this rectangle.
         /// </summary>
-        public bool Contains(Rectangle value)
-        {
-            return value.Left >= Left && value.Right <= Right && value.Top >= Top && value.Bottom <= Bottom;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Rectangle value) => Collisions2d.Contains(this, value);
 
         /// <summary>
         /// Adjusts the edges of this <see cref="Rectangle"/> by specified horizontal and vertical amounts. 
@@ -177,31 +172,14 @@ namespace Geometry
         /// <summary>
         /// Gets whether or not a specified <see cref="Rectangle"/> intersects with this <see cref="Rectangle"/>.
         /// </summary>
-        public bool Intersects(Rectangle r)
-        {
-            // Check if the rectangles are intersecting or tangent
-            bool intersectingOrTangent = Right >= r.Left && // rect1's right side is to the right of or touching rect2's left side
-                                         Left <= r.Right && // rect1's left side is to the left of or touching rect2's right side
-                                         Bottom >= r.Top && // rect1's bottom side is below or touching rect2's top side
-                                         Top <= r.Bottom;   // rect1's top side is above or touching rect2's bottom side
-
-            return intersectingOrTangent;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Rectangle r) => Collisions2d.Intersects(this, r);
 
         /// <summary>
         /// Gets whether or not a specified <see cref="Circle"/> intersects with this <see cref="Rectangle"/>.
         /// </summary>
-        public bool Intersects(Circle c)
-        {
-            // closest point on (or in) the rectangle to the circle centre
-            float closestX = Math.Clamp(c.Center.X, Left, Right);
-            float closestY = Math.Clamp(c.Center.Y, Top, Bottom);
-
-            float dx = c.Center.X - closestX;
-            float dy = c.Center.Y - closestY;
-
-            return (dx * dx + dy * dy) <= (c.Radius * c.Radius);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Circle c) => Collisions2d.Intersects(c, this);
 
         /// <summary>
         /// Creates a new <see cref="Rectangle"/> that completely contains two r rectangles.
@@ -222,6 +200,7 @@ namespace Geometry
         /// </summary>
         /// <param name="r">The rectangle to shift.</param>
         /// <param name="v">The translation to apply.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle operator +(Rectangle r, Vector2 v)
         {
             return new Rectangle()
@@ -236,6 +215,7 @@ namespace Geometry
         /// <summary>
         /// Creates a new <see cref="Rectangle"/> that is shifted by the negation of a vector.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle operator -(Rectangle r, Vector2 v)
         {
             return new Rectangle()
@@ -251,6 +231,7 @@ namespace Geometry
         /// Returns a copy of the rectangle scaled about its top-left corner (width and height multiplied by <paramref name="scale"/>).
         /// Throws <see cref="ArgumentException"/> if <paramref name="scale"/> is negative.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle operator *(Rectangle r, float scale)
         {
             if (scale < 0)
@@ -269,6 +250,7 @@ namespace Geometry
         /// Returns a copy of the rectangle scaled about its top-left corner by 1/<paramref name="scale"/>.
         /// Throws <see cref="DivideByZeroException"/> if <paramref name="scale"/> is zero.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Rectangle operator /(Rectangle r, float scale)
         {
             if (scale == 0)
@@ -288,6 +270,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other rectangle has the same left, top, right and bottom edges (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Rectangle r)
         {
             return Left == r.Left && Top == r.Top && Right == r.Right && Bottom == r.Bottom;
@@ -296,11 +279,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both rectangles have the same edges.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Rectangle a, Rectangle b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the rectangles differ in any edge.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Rectangle a, Rectangle b) => !a.Equals(b);
 
         /// <summary>

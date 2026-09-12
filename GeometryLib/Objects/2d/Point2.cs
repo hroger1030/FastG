@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public readonly struct Point2 : IEquatable<Point2>
@@ -57,6 +59,7 @@ namespace Geometry
         /// <summary>
         /// Creates a point from explicit X and Y coordinates.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2(float x, float y)
         {
             X = x;
@@ -66,6 +69,7 @@ namespace Geometry
         /// <summary>
         /// Returns the Euclidean distance from this point to <paramref name="p"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float DistanceTo(Point2 p)
         {
             return DistanceTo(this, p);
@@ -74,6 +78,7 @@ namespace Geometry
         /// <summary>
         /// Returns the vector2 required to diplace to a specified point2.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector2 DisplacementTo(Point2 to)
         {
             return new Vector2(to.X - X, to.Y - Y);
@@ -83,6 +88,7 @@ namespace Geometry
         /// Returns the squared Euclidean distance from this point to <paramref name="p"/>.
         /// Cheaper than <see cref="DistanceTo(Point2)"/> (no square root); prefer it when comparing distances.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float DistanceSquaredTo(Point2 p)
         {
             return DistanceSquaredTo(this, p);
@@ -91,6 +97,7 @@ namespace Geometry
         /// <summary>
         /// Returns the Euclidean distance between two points.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceTo(Point2 p1, Point2 p2)
         {
             return MathF.Sqrt(DistanceSquaredTo(p1, p2));
@@ -100,6 +107,7 @@ namespace Geometry
         /// Returns the squared Euclidean distance between two points. Cheaper than
         /// <see cref="DistanceTo(Point2, Point2)"/> (no square root); prefer it when comparing distances.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceSquaredTo(Point2 p1, Point2 p2)
         {
             float dx = p1.X - p2.X;
@@ -111,6 +119,7 @@ namespace Geometry
         /// <summary>
         /// Translates a point by a vector, returning the displaced point.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 operator +(Point2 p, Vector2 v)
         {
             return new Point2(p.X + v.X, p.Y + v.Y);
@@ -119,6 +128,7 @@ namespace Geometry
         /// <summary>
         /// Translates a point by the negation of a vector, returning the displaced point.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 operator -(Point2 p, Vector2 v)
         {
             return new Point2(p.X - v.X, p.Y - v.Y);
@@ -135,6 +145,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other point has exactly equal X and Y coordinates (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Point2 p)
         {
             return X == p.X && Y == p.Y;
@@ -143,11 +154,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both points share the same coordinates.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Point2 a, Point2 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the points differ in either coordinate.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Point2 a, Point2 b) => !a.Equals(b);
 
         /// <summary>

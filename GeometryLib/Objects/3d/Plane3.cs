@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public readonly struct Plane3 : IEquatable<Plane3>
@@ -59,6 +61,7 @@ namespace Geometry
         /// Returns the signed distance from <paramref name="point"/> to this plane. Positive on the side the
         /// normal points toward, negative on the other side. Correct for a non-unit normal (it divides by the normal length).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float DistanceTo(Point3 point)
         {
 
@@ -70,6 +73,7 @@ namespace Geometry
         /// <summary>
         /// Returns an equivalent plane whose normal has unit length (normal and D both divided by the current normal length).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Plane3 Normalize()
         {
             float length = MathF.Sqrt(Normal.X * Normal.X + Normal.Y * Normal.Y + Normal.Z * Normal.Z);
@@ -90,6 +94,7 @@ namespace Geometry
         /// Returns true if the other plane has the same normal and D (no tolerance; equivalent planes with
         /// scaled coefficients are not considered equal).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Plane3 other)
         {
             return Normal.Equals(other.Normal) && D.Equals(other.D);
@@ -98,11 +103,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both planes have the same normal and D.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Plane3 a, Plane3 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the planes differ in normal or D.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Plane3 a, Plane3 b) => !a.Equals(b);
 
         /// <summary>

@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public readonly struct Point3 : IEquatable<Point3>
@@ -44,6 +46,7 @@ namespace Geometry
         /// <summary>
         /// Creates a point from explicit X, Y and Z coordinates.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3(float x, float y, float z)
         {
             X = x;
@@ -64,6 +67,7 @@ namespace Geometry
         /// <summary>
         /// Translates a point by a vector, returning the displaced point.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 operator +(Point3 p, Vector3 v)
         {
             return new Point3(p.X + v.X, p.Y + v.Y, p.Z + v.Z);
@@ -72,6 +76,7 @@ namespace Geometry
         /// <summary>
         /// Translates a point by the negation of a vector, returning the displaced point.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 operator -(Point3 p, Vector3 v)
         {
             return new Point3(p.X - v.X, p.Y - v.Y, p.Z - v.Z);
@@ -88,6 +93,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other point has exactly equal X, Y and Z coordinates (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Point3 p)
         {
             return X == p.X && Y == p.Y && Z == p.Z;
@@ -96,11 +102,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both points share the same coordinates.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Point3 a, Point3 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the points differ in any coordinate.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Point3 a, Point3 b) => !a.Equals(b);
 
         /// <summary>

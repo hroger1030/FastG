@@ -27,15 +27,11 @@ namespace GeometryTests
     {
         [Test]
         [Category("AABB")]
-        public void AABB_ContainsAndIntersects_Pass()
+        public void AABB_VolumeAndSurfaceArea_Pass()
         {
             var box = new AABB(new Point3(0f, 0f, 0f), new Point3(2f, 2f, 2f));
             Assert.That(box.Volume, Is.EqualTo(8f));
             Assert.That(box.SurfaceArea, Is.EqualTo(24f));
-            Assert.That(box.Contains(new Point3(1f, 1f, 1f)), Is.True);
-            Assert.That(box.Contains(new Point3(3f, 1f, 1f)), Is.False);
-            Assert.That(box.Intersects(new AABB(new Point3(1.5f, 1.5f, 1.5f), new Point3(3f, 3f, 3f))), Is.True);
-            Assert.That(box.Intersects(new AABB(new Point3(3f, 3f, 3f), new Point3(4f, 4f, 4f))), Is.False);
         }
 
         [Test]

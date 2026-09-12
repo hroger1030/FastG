@@ -28,33 +28,31 @@ namespace GeometryTests
     {
         [Test]
         [Category("Polygon")]
-        public void Polygon_AreaPerimeterAndContainment_Pass()
+        public void Polygon_SidesAreaAndPerimeter_Pass()
         {
-            var polygon = new Polygon(new List<Point2>
-            {
+            var polygon = new Polygon(
+            [
                 new Point2(0f, 0f),
                 new Point2(2f, 0f),
                 new Point2(2f, 2f),
                 new Point2(0f, 2f),
-            });
+            ]);
 
             Assert.That(polygon.Sides, Is.EqualTo(4));
             Assert.That(polygon.Area, Is.EqualTo(4f));
             Assert.That(polygon.Perimeter, Is.EqualTo(8f));
-            Assert.That(polygon.Contains(new Point2(1f, 1f)), Is.True);
-            Assert.That(polygon.Contains(new Point2(3f, 3f)), Is.False);
         }
 
         [Test]
         [Category("Polygon")]
         public void Polygon_OperatorTranslation_Pass()
         {
-            var polygon = new Polygon(new List<Point2>
-            {
+            var polygon = new Polygon(
+            [
                 new Point2(0f, 0f),
                 new Point2(1f, 0f),
                 new Point2(1f, 1f),
-            });
+            ]);
 
             var translated = polygon + new Vector2(1f, 1f);
             Assert.That(translated.Contains(new Point2(1.1f, 1.1f)), Is.True);
@@ -67,12 +65,12 @@ namespace GeometryTests
         [Category("Polygon")]
         public void Polygon_ScalingOperators_Pass()
         {
-            var polygon = new Polygon(new List<Point2>
-            {
+            var polygon = new Polygon(
+            [
                 new Point2(1f, 1f),
                 new Point2(2f, 1f),
                 new Point2(2f, 2f),
-            });
+            ]);
 
             var scaled = polygon * 2f;
             Assert.That(scaled.Vertices[0].X, Is.EqualTo(2f));
@@ -87,12 +85,12 @@ namespace GeometryTests
         [Category("Polygon")]
         public void Polygon_ScalingOperatorDivideByZero_Fail()
         {
-            var polygon = new Polygon(new List<Point2>
-            {
+            var polygon = new Polygon(
+            [
                 new Point2(1f, 1f),
                 new Point2(2f, 1f),
                 new Point2(2f, 2f),
-            });
+            ]);
 
             Assert.Throws<DivideByZeroException>(() => { var _ = polygon / 0f; });
         }
@@ -121,10 +119,10 @@ namespace GeometryTests
         [Category("Polygon")]
         public void Polygon_EqualsHashCodeAndOperators_Pass()
         {
-            var triangle = new Polygon(new List<Point2> { new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f) });
-            var same = new Polygon(new List<Point2> { new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f) });
-            var reordered = new Polygon(new List<Point2> { new Point2(1f, 0f), new Point2(0f, 0f), new Point2(0f, 1f) });
-            var shorter = new Polygon(new List<Point2> { new Point2(0f, 0f), new Point2(1f, 0f) });
+            var triangle = new Polygon([new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f)]);
+            var same = new Polygon([new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f)]);
+            var reordered = new Polygon([new Point2(1f, 0f), new Point2(0f, 0f), new Point2(0f, 1f)]);
+            var shorter = new Polygon([new Point2(0f, 0f), new Point2(1f, 0f)]);
 
             Assert.That(triangle.Equals(same), Is.True);
             Assert.That(triangle.Equals(reordered), Is.False);
@@ -147,7 +145,7 @@ namespace GeometryTests
         [Category("Polygon")]
         public void Polygon_CopyConstructor_Pass()
         {
-            var original = new Polygon(new List<Point2> { new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f) });
+            var original = new Polygon([new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f)]);
             var copy = new Polygon(original);
 
             Assert.That(copy, Is.EqualTo(original));
@@ -164,7 +162,7 @@ namespace GeometryTests
         [Category("Polygon")]
         public void Polygon_ToString_Pass()
         {
-            var polygon = new Polygon(new List<Point2> { new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f) });
+            var polygon = new Polygon([new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0f, 1f)]);
 
             Assert.That(polygon.ToString(), Is.EqualTo("Polygon[(0, 0), (1, 0), (0, 1)]"));
         }

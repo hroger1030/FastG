@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -111,36 +112,15 @@ namespace Geometry
         /// <summary>
         /// Returns true if (<paramref name="x"/>, <paramref name="y"/>) lies inside the polygon.
         /// </summary>
-        public bool Contains(float x, float y)
-        {
-            return Contains(new Point2(x, y));
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(float x, float y) => Contains(new Point2(x, y));
 
         /// <summary>
         /// Returns true if <paramref name="point"/> lies inside the polygon, using a ray-casting (even-odd) test.
         /// Always returns false for polygons with fewer than three vertices; behavior on the boundary is not guaranteed.
         /// </summary>
-        public bool Contains(Point2 point)
-        {
-            if (Sides < 3)
-                return false;
-
-            bool isInside = false;
-            var vertices = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(Vertices);
-
-            for (int i = 0, j = vertices.Length - 1; i < vertices.Length; j = i++)
-            {
-                var vi = vertices[i];
-                var vj = vertices[j];
-
-                if ((vi.Y > point.Y) != (vj.Y > point.Y) && point.X < (vj.X - vi.X) * (point.Y - vi.Y) / (vj.Y - vi.Y) + vi.X)
-                {
-                    isInside = !isInside;
-                }
-            }
-
-            return isInside;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point2 point) => Collisions2d.Contains(this, point);
 
         /// <summary>
         /// Creates a new <see cref="Polygon"/> that is shifted by a vector.
@@ -215,8 +195,8 @@ namespace Geometry
             if (ReferenceEquals(this, obj)) return true;
             if (GetType() != obj.GetType()) return false;
 
-            var new_obj = (Polygon)obj;
-            return Equals(new_obj);
+            var newObj = (Polygon)obj;
+            return Equals(newObj);
         }
 
         /// <summary>
@@ -258,6 +238,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if both polygons are null, or have the same vertices in the same order.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Polygon a, Polygon b)
         {
             if (a is null)
@@ -269,6 +250,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if exactly one polygon is null, or their vertices differ.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Polygon a, Polygon b) => !(a == b);
 
         /// <summary>

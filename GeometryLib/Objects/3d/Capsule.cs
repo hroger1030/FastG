@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public readonly struct Capsule : IEquatable<Capsule>
@@ -50,50 +52,15 @@ namespace Geometry
         /// Returns true if <paramref name="point"/> lies inside or on this capsule. A degenerate capsule
         /// (PointA == PointB) is treated as a sphere.
         /// </summary>
-        public bool Contains(Point3 point)
-        {
-
-            var ab = new Vector3(PointA, PointB);
-            if (ab.LengthSquared() == 0f)
-            {
-                return new Sphere(PointA, Radius).Contains(point);
-            }
-
-            var ap = new Vector3(PointA, point);
-            float t = (ab.X * ap.X + ab.Y * ap.Y + ab.Z * ap.Z) / (ab.X * ab.X + ab.Y * ab.Y + ab.Z * ab.Z);
-            t = Math.Clamp(t, 0f, 1f);
-
-            var closest = new Point3(
-                PointA.X + ab.X * t,
-                PointA.Y + ab.Y * t,
-                PointA.Z + ab.Z * t);
-
-            return new Sphere(closest, Radius).Contains(point);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point3 point) => Collisions3d.Contains(this, point);
 
         /// <summary>
         /// Returns true if this capsule overlaps or touches <paramref name="sphere"/>, tested via the closest point
         /// on the capsule's core segment to the sphere center. A degenerate capsule is treated as a sphere.
         /// </summary>
-        public bool Intersects(Sphere sphere)
-        {
-
-            var ab = new Vector3(PointA, PointB);
-
-            if (ab.LengthSquared() == 0f)
-                return new Sphere(PointA, Radius).Intersects(sphere);
-
-            var ac = new Vector3(PointA, sphere.Center);
-            float t = (ab.X * ac.X + ab.Y * ac.Y + ab.Z * ac.Z) / (ab.X * ab.X + ab.Y * ab.Y + ab.Z * ab.Z);
-            t = Math.Clamp(t, 0f, 1f);
-
-            var closest = new Point3(
-                PointA.X + ab.X * t,
-                PointA.Y + ab.Y * t,
-                PointA.Z + ab.Z * t);
-
-            return new Sphere(closest, Radius).Intersects(sphere);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Sphere sphere) => Collisions3d.Intersects(this, sphere);
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Capsule"/> with the same endpoints and radius.
@@ -106,6 +73,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other capsule has the same endpoints (in the same order) and radius (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Capsule other)
         {
             return PointA.Equals(other.PointA)
@@ -116,11 +84,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both capsules have the same endpoints and radius.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Capsule a, Capsule b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the capsules differ in either endpoint or radius.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Capsule a, Capsule b) => !a.Equals(b);
 
         /// <summary>

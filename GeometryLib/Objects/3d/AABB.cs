@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -76,22 +77,14 @@ namespace Geometry
         /// <summary>
         /// Returns true if <paramref name="point"/> lies inside or on the faces of this box.
         /// </summary>
-        public bool Contains(Point3 point)
-        {
-            return point.X >= Min.X && point.X <= Max.X &&
-                   point.Y >= Min.Y && point.Y <= Max.Y &&
-                   point.Z >= Min.Z && point.Z <= Max.Z;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point3 point) => Collisions3d.Contains(this, point);
 
         /// <summary>
         /// Returns true if this box overlaps or touches <paramref name="other"/> on all three axes.
         /// </summary>
-        public bool Intersects(AABB other)
-        {
-            return Min.X <= other.Max.X && Max.X >= other.Min.X &&
-                   Min.Y <= other.Max.Y && Max.Y >= other.Min.Y &&
-                   Min.Z <= other.Max.Z && Max.Z >= other.Min.Z;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(AABB other) => Collisions3d.Intersects(this, other);
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is an <see cref="AABB"/> with the same corners.
@@ -104,6 +97,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other box has the same min and max corners (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(AABB other)
         {
             return Min.Equals(other.Min) && Max.Equals(other.Max);
@@ -112,11 +106,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both boxes have the same corners.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(AABB a, AABB b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the boxes differ in either corner.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(AABB a, AABB b) => !a.Equals(b);
 
         /// <summary>

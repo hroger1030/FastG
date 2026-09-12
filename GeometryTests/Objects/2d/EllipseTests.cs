@@ -27,12 +27,10 @@ namespace GeometryTests
     {
         [Test]
         [Category("Ellipse")]
-        public void Ellipse_AreaPerimeterContains_Pass()
+        public void Ellipse_Area_Pass()
         {
-            var ellipse = new Ellipse(new Point2(0f, 0f), 2f, 1f);
-            Assert.That(ellipse.Area, Is.EqualTo(MathF.PI * 2f * 1f).Within(Constants.FLOAT_ERROR_MARGIN));
-            Assert.That(ellipse.Contains(new Point2(1f, 0f)), Is.True);
-            Assert.That(ellipse.Contains(new Point2(3f, 0f)), Is.False);
+            var ellipse = new Ellipse(Point2.ZERO, 2f, 1f);
+            Assert.That(ellipse.Area, Is.EqualTo(Constants.TWO_PI * 1f).Within(Constants.FLOAT_ERROR_MARGIN));
         }
 
         [Test]

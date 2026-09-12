@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -154,6 +155,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other triangle has the same vertices in the same order (A, B, C positionally equal).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Triangle2 t)
         {
             return A.Equals(t.A) && B.Equals(t.B) && C.Equals(t.C);
@@ -162,11 +164,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both triangles have the same vertices in the same order.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Triangle2 a, Triangle2 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the triangles differ in any vertex or vertex ordering.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Triangle2 a, Triangle2 b) => !a.Equals(b);
 
         /// <summary>

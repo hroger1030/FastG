@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -84,17 +85,8 @@ namespace Geometry
         /// <summary>
         /// Returns true if <paramref name="point"/> lies inside or on this ellipse.
         /// </summary>
-        public bool Contains(Point2 point)
-        {
-            float dx = point.X - Center.X;
-            float dy = point.Y - Center.Y;
-
-            // these two terms could be precomputed for perf if needed.
-            float invRadiusXSquared = 1 / (RadiusX * RadiusX);
-            float invRadiusYSquared = 1 / (RadiusY * RadiusY);
-
-            return (dx * dx * invRadiusXSquared) + (dy * dy * invRadiusYSquared) <= 1f;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point2 point) => Collisions2d.Contains(this, point);
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is an <see cref="Ellipse"/> with the same center and semi-axes.
@@ -107,6 +99,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other ellipse has the same center and semi-axis lengths (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Ellipse other)
         {
             return Center.Equals(other.Center) && RadiusX.Equals(other.RadiusX) && RadiusY.Equals(other.RadiusY);
@@ -115,11 +108,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both ellipses have the same center and semi-axes.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Ellipse a, Ellipse b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the ellipses differ in center or either semi-axis.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Ellipse a, Ellipse b) => !a.Equals(b);
 
         /// <summary>

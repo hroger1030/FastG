@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -62,6 +63,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other line has the same endpoints in the same order (direction-sensitive).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Line2 l)
         {
             return Point1.Equals(l.Point1) && Point2.Equals(l.Point2);
@@ -70,11 +72,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both lines have the same endpoints in the same order.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Line2 a, Line2 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the lines differ in either endpoint or ordering.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Line2 a, Line2 b) => !a.Equals(b);
 
         /// <summary>

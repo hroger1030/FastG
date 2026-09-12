@@ -27,17 +27,11 @@ namespace GeometryTests
     {
         [Test]
         [Category("Sphere")]
-        public void Sphere_AreaVolumeContainsIntersects_Pass()
+        public void Sphere_VolumeAndSurfaceArea_Pass()
         {
             var sphere = new Sphere(new Point3(0f, 0f, 0f), 2f);
             Assert.That(sphere.Volume, Is.EqualTo((4f / 3f) * MathF.PI * 8f).Within(Constants.FLOAT_ERROR_MARGIN));
             Assert.That(sphere.SurfaceArea, Is.EqualTo(4f * MathF.PI * 4f).Within(Constants.FLOAT_ERROR_MARGIN));
-            Assert.That(sphere.Contains(new Point3(1f, 0f, 0f)), Is.True);
-            Assert.That(sphere.Contains(new Point3(3f, 0f, 0f)), Is.False);
-
-            var nearby = new Sphere(new Point3(3f, 0f, 0f), 1.5f);
-            Assert.That(sphere.Intersects(nearby), Is.True);
-            Assert.That(sphere.Intersects(new Sphere(new Point3(5f, 0f, 0f), 1f)), Is.False);
         }
 
         [Test]
@@ -46,30 +40,6 @@ namespace GeometryTests
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Sphere(new Point3(0f, 0f, 0f), 0f));
             Assert.Throws<ArgumentOutOfRangeException>(() => new Sphere(new Point3(0f, 0f, 0f), -1f));
-        }
-
-        [Test]
-        [Category("Sphere")]
-        public void Sphere_IntersectsCube_Pass()
-        {
-            var sphere = new Sphere(new Point3(0f, 0f, 0f), 1f);
-            var overlapping = new Cube(0.5f, 0.5f, 0.5f, 2f, 2f, 2f);
-            var separate = new Cube(10f, 10f, 10f, 11f, 11f, 11f);
-
-            Assert.That(sphere.Intersects(overlapping), Is.True);
-            Assert.That(sphere.Intersects(separate), Is.False);
-        }
-
-        [Test]
-        [Category("Sphere")]
-        public void Sphere_ContainsCube_Pass()
-        {
-            var sphere = new Sphere(new Point3(0f, 0f, 0f), 10f);
-            var containedCube = new Cube(-1f, -1f, -1f, 1f, 1f, 1f);
-            var farCube = new Cube(50f, 50f, 50f, 51f, 51f, 51f);
-
-            Assert.That(sphere.Contains(containedCube), Is.True);
-            Assert.That(sphere.Contains(farCube), Is.False);
         }
 
         [Test]

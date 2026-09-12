@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public readonly struct Vector3 : IEquatable<Vector3>
@@ -54,6 +56,7 @@ namespace Geometry
         /// <summary>
         /// Creates a vector from explicit X, Y and Z components.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector3(float x, float y, float z)
         {
             X = x;
@@ -64,6 +67,7 @@ namespace Geometry
         /// <summary>
         /// Adds two vectors component-wise.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 operator +(Vector3 v1, Vector3 v2)
         {
             return new Vector3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
@@ -72,6 +76,7 @@ namespace Geometry
         /// <summary>
         /// Subtracts <paramref name="v2"/> from <paramref name="v1"/> component-wise.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 operator -(Vector3 v1, Vector3 v2)
         {
             return new Vector3(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
@@ -80,6 +85,7 @@ namespace Geometry
         /// <summary>
         /// Multiplies each component of the vector by scalar <paramref name="s2"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 operator *(Vector3 v1, float s2)
         {
             return new Vector3(v1.X * s2, v1.Y * s2, v1.Z * s2);
@@ -88,6 +94,7 @@ namespace Geometry
         /// <summary>
         /// Divides each component of the vector by scalar <paramref name="s2"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 operator /(Vector3 v1, float s2)
         {
             return new Vector3(v1.X / s2, v1.Y / s2, v1.Z / s2);
@@ -96,6 +103,7 @@ namespace Geometry
         /// <summary>
         /// Returns the cross product <paramref name="v1"/> x <paramref name="v2"/>, a vector perpendicular to both inputs.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Cross(Vector3 v1, Vector3 v2)
         {
             return new Vector3(
@@ -107,6 +115,7 @@ namespace Geometry
         /// <summary>
         /// Returns the cross product this x <paramref name="v"/>, a vector perpendicular to both inputs.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector3 Cross(Vector3 v)
         {
             return Cross(this, v);
@@ -115,6 +124,7 @@ namespace Geometry
         /// <summary>
         /// Returns the dot product of two vectors.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Dot(Vector3 v1, Vector3 v2)
         {
             return (v1.X * v2.X) + (v1.Y * v2.Y) + (v1.Z * v2.Z);
@@ -123,6 +133,7 @@ namespace Geometry
         /// <summary>
         /// Returns the dot product of this vector with <paramref name="v"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Dot(Vector3 v)
         {
             return Dot(this, v);
@@ -131,6 +142,7 @@ namespace Geometry
         /// <summary>
         /// Returns a unit-length copy of <paramref name="v1"/>. Throws <see cref="DivideByZeroException"/> if the vector's magnitude is zero.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Normalize(Vector3 v1)
         {
             var length = v1.Length();
@@ -152,18 +164,20 @@ namespace Geometry
         /// Returns the squared Euclidean distance between the points that the two vectors represent.
         /// Cheaper than <see cref="DistanceTo(Vector3, Vector3)"/> (no square root).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceSquaredTo(Vector3 v1, Vector3 v2)
         {
-            float delta_x = v1.X - v2.X;
-            float delta_y = v1.Y - v2.Y;
-            float delta_z = v1.Z - v2.Z;
+            float deltaX = v1.X - v2.X;
+            float deltaY = v1.Y - v2.Y;
+            float deltaZ = v1.Z - v2.Z;
 
-            return (delta_x * delta_x) + (delta_y * delta_y) + (delta_z * delta_z);
+            return (deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ);
         }
 
         /// <summary>
         /// Returns the Euclidean distance between the points that the two vectors represent.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceTo(Vector3 v1, Vector3 v2)
         {
             return MathF.Sqrt(DistanceSquaredTo(v1, v2));
@@ -173,6 +187,7 @@ namespace Geometry
         /// Returns the squared Euclidean distance between this vector and <paramref name="other"/>.
         /// Cheaper than <see cref="DistanceTo(Vector3)"/> (no square root).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float DistanceSquaredTo(Vector3 other)
         {
             return DistanceSquaredTo(this, other);
@@ -181,6 +196,7 @@ namespace Geometry
         /// <summary>
         /// Returns the Euclidean distance between this vector and <paramref name="other"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float DistanceTo(Vector3 other)
         {
             return DistanceTo(this, other);
@@ -190,11 +206,13 @@ namespace Geometry
         /// Returns the squared magnitude of this vector. Cheaper than <see cref="Length"/> (no square root);
         /// prefer it when comparing magnitudes or testing against a squared threshold.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float LengthSquared() => (X * X) + (Y * Y) + (Z * Z);
 
         /// <summary>
         /// Returns the magnitude (Euclidean length) of this vector.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Length() => MathF.Sqrt(LengthSquared());
 
         /// <summary>
@@ -208,6 +226,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other vector has exactly equal X, Y and Z components (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Vector3 v)
         {
             return X == v.X && Y == v.Y && Z == v.Z;
@@ -216,11 +235,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both vectors have exactly equal components.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Vector3 a, Vector3 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the vectors differ in any component.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Vector3 a, Vector3 b) => !a.Equals(b);
 
         /// <summary>

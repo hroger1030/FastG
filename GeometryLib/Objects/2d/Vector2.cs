@@ -16,6 +16,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System.Runtime.CompilerServices;
+
 namespace Geometry
 {
     public readonly struct Vector2 : IEquatable<Vector2>
@@ -52,6 +54,7 @@ namespace Geometry
         /// <summary>
         /// Creates a vector from explicit X and Y components.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector2(float x, float y)
         {
             X = x;
@@ -61,6 +64,7 @@ namespace Geometry
         /// <summary>
         /// Adds two vectors component-wise.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 operator +(Vector2 v1, Vector2 v2)
         {
             return new Vector2(v1.X + v2.X, v1.Y + v2.Y);
@@ -69,6 +73,7 @@ namespace Geometry
         /// <summary>
         /// Subtracts <paramref name="v2"/> from <paramref name="v1"/> component-wise.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 operator -(Vector2 v1, Vector2 v2)
         {
             return new Vector2(v1.X - v2.X, v1.Y - v2.Y);
@@ -77,6 +82,7 @@ namespace Geometry
         /// <summary>
         /// Negates each component of the vector.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 operator -(Vector2 v)
         {
             return new Vector2(-v.X, -v.Y);
@@ -85,6 +91,7 @@ namespace Geometry
         /// <summary>
         /// Multiplies each component of the vector by a scalar.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 operator *(Vector2 v, float scale)
         {
             return new Vector2(v.X * scale, v.Y * scale);
@@ -93,6 +100,7 @@ namespace Geometry
         /// <summary>
         /// Divides each component of the vector by a scalar. Throws <see cref="DivideByZeroException"/> if <paramref name="scale"/> is zero.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 operator /(Vector2 v, float scale)
         {
             if (scale == 0f) throw new DivideByZeroException(nameof(scale));
@@ -103,6 +111,7 @@ namespace Geometry
         /// <summary>
         /// Returns a unit-length copy of <paramref name="v"/>. Throws if the vector's magnitude is zero.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 Normalize(Vector2 v)
         {
             return v.Normalize();
@@ -111,6 +120,7 @@ namespace Geometry
         /// <summary>
         /// Returns a unit-length copy of this vector. Throws if the vector's magnitude is zero.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Vector2 Normalize()
         {
             float length = Length();
@@ -126,6 +136,7 @@ namespace Geometry
         /// <summary>
         /// Returns the rotation of this vector in radians, measured counter-clockwise from the +X axis (range -PI to PI).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float VectorToRotation()
         {
             return MathF.Atan2(Y, X);
@@ -136,6 +147,7 @@ namespace Geometry
         /// A 2D cross product has no perpendicular axis to return a vector along, so the result is the
         /// scalar Z component that a 3D cross product would produce; sign indicates winding/orientation.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Cross(Vector2 v1, Vector2 v2)
         {
             return (v1.X * v2.Y) - (v1.Y * v2.X);
@@ -145,6 +157,7 @@ namespace Geometry
         /// Returns the 2D cross product (perp-dot) of this vector with <paramref name="v"/>.
         /// See <see cref="Cross(Vector2, Vector2)"/> for why the result is a scalar.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Cross(Vector2 v)
         {
             return Cross(this, v);
@@ -153,6 +166,7 @@ namespace Geometry
         /// <summary>
         /// Returns the dot product of two vectors.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Dot(Vector2 v1, Vector2 v2)
         {
             return (v1.X * v2.X) + (v1.Y * v2.Y);
@@ -161,6 +175,7 @@ namespace Geometry
         /// <summary>
         /// Returns the dot product of this vector with <paramref name="v"/>.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Dot(Vector2 v)
         {
             return Dot(this, v);
@@ -170,6 +185,7 @@ namespace Geometry
         /// Returns the squared magnitude of this vector. Cheaper than <see cref="Length"/> (no square root);
         /// prefer it when comparing magnitudes or testing against a squared threshold.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float LengthSquared()
         {
             return (X * X) + (Y * Y);
@@ -178,6 +194,7 @@ namespace Geometry
         /// <summary>
         /// Returns the magnitude (Euclidean length) of this vector.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Length()
         {
             return MathF.Sqrt(LengthSquared());
@@ -194,6 +211,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other vector has exactly equal X and Y components (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Vector2 v)
         {
             return X == v.X && Y == v.Y;
@@ -202,11 +220,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both vectors have exactly equal components.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Vector2 a, Vector2 b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the vectors differ in either component.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Vector2 a, Vector2 b) => !a.Equals(b);
 
         /// <summary>

@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -88,72 +89,40 @@ namespace Geometry
         public Circle(Point2 position, float radius) : this(position.X, position.Y, radius) { }
 
         /// <summary>
-        /// Checks to see if circles are intersecting. 
+        /// Checks to see if circles are intersecting.
         /// Tangent circles will return true.
         /// </summary>
-        public bool Intersects(Circle c)
-        {
-            float distance_x = c.Center.X - Center.X;
-            float distance_y = c.Center.Y - Center.Y;
-            float sum_radius = Radius + c.Radius;
-
-            return ((sum_radius * sum_radius) >= (distance_x * distance_x + distance_y * distance_y));
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Circle c) => Collisions2d.Intersects(this, c);
 
         /// <summary>
         /// Returns true if this circle overlaps or touches <paramref name="r"/>, using the closest-point-on-rectangle test.
         /// </summary>
-        public bool Intersects(Rectangle r)
-        {
-            float closestX = Math.Clamp(Center.X, r.Left, r.Right);
-            float closestY = Math.Clamp(Center.Y, r.Top, r.Bottom);
-
-            float distanceX = Center.X - closestX;
-            float distanceY = Center.Y - closestY;
-
-            return (distanceX * distanceX + distanceY * distanceY) <= (Radius * Radius);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Rectangle r) => Collisions2d.Intersects(this, r);
 
         /// <summary>
         /// Returns true if point <paramref name="p"/> lies inside or on this circle.
         /// </summary>
-        public bool Contains(Point2 p)
-        {
-            float distance_x = p.X - Center.X;
-            float distance_y = p.Y - Center.Y;
-
-            // distance_x^2 + distance_y^2 is already non-negative, so no MathF.Abs is needed.
-            return (Radius * Radius) >= (distance_x * distance_x + distance_y * distance_y);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point2 p) => Collisions2d.Contains(this, p);
 
         /// <summary>
         /// Returns true if all four corners of <paramref name="r"/> lie inside or on this circle (i.e. the rectangle is fully enclosed).
         /// </summary>
-        public bool Contains(Rectangle r)
-        {
-            if (!Contains(r.TopLeftCorner)) return false;
-            if (!Contains(r.TopRightCorner)) return false;
-            if (!Contains(r.BottomRightCorner)) return false;
-            if (!Contains(r.BottomLeftCorner)) return false;
-
-            return true;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Rectangle r) => Collisions2d.Contains(this, r);
 
         /// <summary>
         /// Returns true if all three vertices of <paramref name="t"/> lie inside or on this circle (i.e. the triangle is fully enclosed).
         /// </summary>
-        public bool Contains(Triangle2 t)
-        {
-            if (!Contains(t.A)) return false;
-            if (!Contains(t.B)) return false;
-            if (!Contains(t.C)) return false;
-
-            return true;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Triangle2 t) => Collisions2d.Contains(this, t);
 
         /// <summary>
         /// Returns a copy of the circle translated by vector <paramref name="v"/> (radius unchanged).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Circle operator +(Circle c, Vector2 v)
         {
             return new Circle(c.Center.X + v.X, c.Center.Y + v.Y, c.Radius);
@@ -162,6 +131,7 @@ namespace Geometry
         /// <summary>
         /// Returns a copy of the circle translated by the negation of vector <paramref name="v"/> (radius unchanged).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Circle operator -(Circle c, Vector2 v)
         {
             return new Circle(c.Center.X - v.X, c.Center.Y - v.Y, c.Radius);
@@ -171,6 +141,7 @@ namespace Geometry
         /// Returns a copy of the circle with its radius multiplied by <paramref name="scale"/> (center unchanged).
         /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Circle operator *(Circle c, float scale)
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
@@ -182,6 +153,7 @@ namespace Geometry
         /// Returns a copy of the circle with its radius divided by <paramref name="scale"/> (center unchanged).
         /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Circle operator /(Circle c, float scale)
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
@@ -200,6 +172,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other circle has the same center and radius (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Circle c)
         {
             return Center.Equals(c.Center) && Radius.Equals(c.Radius);
@@ -208,11 +181,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both circles have the same center and radius.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Circle a, Circle b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the circles differ in center or radius.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Circle a, Circle b) => !a.Equals(b);
 
         /// <summary>

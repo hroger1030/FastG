@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -135,59 +136,40 @@ namespace Geometry
         /// <summary>
         /// Returns true if point <paramref name="p"/> lies inside or on the faces of this cube.
         /// </summary>
-        public bool Contains(Point3 p)
-        {
-            return Contains(p.X, p.Y, p.Z);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point3 p) => Collisions3d.Contains(this, p);
 
         /// <summary>
         /// Returns true if (<paramref name="x"/>, <paramref name="y"/>, <paramref name="z"/>) lies inside or on the faces of this cube.
         /// </summary>
-        public bool Contains(float x, float y, float z)
-        {
-            return (X1 <= x && X2 >= x) && (Y1 <= y && Y2 >= y) && (Z1 <= z && Z2 >= z);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(float x, float y, float z) => Contains(new Point3(x, y, z));
 
         /// <summary>
         /// Returns true if <paramref name="c"/> lies entirely inside or on this cube (i.e. the cube is fully enclosed).
         /// Like the other containment tests, this assumes both cubes have X1 &lt;= X2, Y1 &lt;= Y2 and Z1 &lt;= Z2, so
         /// enclosing the two extreme corners of <paramref name="c"/> is enough.
         /// </summary>
-        public bool Contains(Cube c)
-        {
-            return Contains(c.X1, c.Y1, c.Z1) && Contains(c.X2, c.Y2, c.Z2);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Cube c) => Collisions3d.Contains(this, c);
 
         /// <summary>
         /// Returns true if this cube overlaps or touches <paramref name="c"/> on all three axes.
         /// </summary>
-        public bool Intersects(Cube c)
-        {
-            return X1 <= c.X2 && X2 >= c.X1 &&
-                   Y1 <= c.Y2 && Y2 >= c.Y1 &&
-                   Z1 <= c.Z2 && Z2 >= c.Z1;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Cube c) => Collisions3d.Intersects(this, c);
 
         /// <summary>
         /// Gets whether or not a specified <see cref="Sphere"/> intersects with this <see cref="Cube"/>.
         /// </summary>
-        public bool Intersects(Sphere s)
-        {
-            float closestX = Math.Clamp(s.Center.X, X1, X2);
-            float closestY = Math.Clamp(s.Center.Y, Y1, Y2);
-            float closestZ = Math.Clamp(s.Center.Z, Z1, Z2);
-
-            float distanceX = s.Center.X - closestX;
-            float distanceY = s.Center.Y - closestY;
-            float distanceZ = s.Center.Z - closestZ;
-
-            return (distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ) <= (s.Radius * s.Radius);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Sphere s) => Collisions3d.Intersects(this, s);
 
         /// <summary>
         /// Creates a new <see cref="Cube"/> that is scaled up from the X1,Y1,Z1 corner. Calling this with a scale of
         /// 2 will double the width, height and depth while keeping X1,Y1,Z1 fixed.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Cube operator *(Cube c, float scale)
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
@@ -206,6 +188,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other cube has the same six corner coordinates (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Cube c)
         {
             return X1 == c.X1 && X2 == c.X2 && Y1 == c.Y1 && Y2 == c.Y2 && Z1 == c.Z1 && Z2 == c.Z2;
@@ -214,11 +197,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both cubes have the same six coordinates.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Cube a, Cube b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the cubes differ in any coordinate.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Cube a, Cube b) => !a.Equals(b);
 
         /// <summary>

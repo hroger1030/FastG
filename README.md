@@ -7,8 +7,10 @@ to extend with new shapes.
 
 Every shape is an **immutable value type** (`readonly struct`) except `Polygon` and `VectorN`, which are
 backed by collections. Passing a shape around, reading its `.Center`, or building one per frame costs no
-heap allocation and produces no garbage. See
-[Value types and reference types](#value-types-and-reference-types).
+heap allocation and produces no garbage. See [Value types and reference types](#value-types-and-reference-types).
+
+The library is also tuned for the hot paths games actually hit every frame — see
+[Performance](#performance).
 
 Note that some objects are assumed to be grid-aligned (e.g. `Rectangle`, `Cube`, `AABB`). Making these
 fully general (arbitrary rotation, etc.) is potential future work.
@@ -24,6 +26,7 @@ soon as possible.
 - [Building and testing](#building-and-testing)
 - [Objects](#objects)
 - [Value types and reference types](#value-types-and-reference-types)
+- [Performance](#performance)
 - [Code examples](#code-examples)
   - [2D: points, vectors, and circles](#2d-points-vectors-and-circles)
   - [3D: bounding volumes](#3d-bounding-volumes)
@@ -101,6 +104,12 @@ dotnet test
 Every shape is an immutable value type (`readonly struct`) except where marked _(class)_; see
 [Value types and reference types](#value-types-and-reference-types).
 
+### Shared (`GeometryLib/Objects`)
+
+- Constants — `FLOAT_ERROR_MARGIN`, the PI family (`PI`, `TWO_PI`, `HALF_PI`, `QUARTER_PI`), `DEG_TO_RAD`/`RAD_TO_DEG`,
+  `SQRT_2`/`SQRT_3`, and their precomputed reciprocals (`INV_PI`, `INV_TWO_PI`, `INV_HALF_PI`, `INV_SQRT_2`,
+  `INV_SQRT_3`) — see [Performance](#performance).
+
 ### 2D (`GeometryLib/Objects/2d`)
 
 - Point2
@@ -162,6 +171,28 @@ What this means when you use them:
 `Vector2`/`Vector3` used to have an in-place `Normalize()` that mutated the instance; it now returns a
 unit-length copy (`v = v.Normalize();`). `Polygon` still has its mutating helpers.
 
+## Performance
+
+Beyond being allocation-free value types, the shapes and vectors in this library are specifically tuned
+for tight, per-frame call sites — collision loops, per-vertex transforms, that kind of thing:
+
+- **`readonly struct` everywhere it's feasible.** See [Value types and reference types](#value-types-and-reference-types).
+  No heap allocation, no GC pressure, cheap to copy (most shapes are 8-24 bytes).
+- **`[MethodImpl(MethodImplOptions.AggressiveInlining)]` on the hot members.** Arithmetic operators
+  (`+`, `-`, `*`, `/`), the strongly-typed `Equals`/`==`/`!=`, and the core vector math (`Dot`, `Cross`,
+  `Length`, `LengthSquared`, `DistanceTo`, `DistanceSquaredTo`, `Normalize`) all carry the hint, so the
+  JIT doesn't have to guess — even across assembly boundaries, before tiered PGO has warmed up. It's
+  deliberately *not* applied to anything with a loop (`VectorN`, `Polygon`) or multi-branch geometry
+  tests (`Intersects`, `Contains`) — inlining those would bloat call sites without buying anything.
+- **Precomputed constants instead of runtime division.** [`Constants`](GeometryLib/Objects/Constants.cs)
+  provides `PI`/`TWO_PI`/`HALF_PI`/`QUARTER_PI`, `DEG_TO_RAD`/`RAD_TO_DEG`, `SQRT_2`/`SQRT_3`, and their
+  reciprocals (`INV_PI`, `INV_TWO_PI`, `INV_HALF_PI`, `INV_SQRT_2`, `INV_SQRT_3`) as compile-time
+  `const float`s. A multiply is cheaper than a divide on most hardware, so prefer `x * Constants.INV_PI`
+  over `x / Constants.PI` on a hot path.
+
+None of this changes behavior or API surface — it's all either compiler hints or drop-in constants, so
+existing code keeps working unchanged.
+
 ## Code examples
 
 ### 2D: points, vectors, and circles
@@ -175,7 +206,7 @@ var end = new Point2(3f, 4f);
 float distance = start.DistanceTo(end); // 5
 
 var direction = new Vector2(end) - new Vector2(start);
-direction.Normalize();
+direction = direction.Normalize();
 
 Point2 moved = start + (direction * 2f); // move 2 units toward `end`
 

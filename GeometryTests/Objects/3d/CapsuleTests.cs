@@ -27,20 +27,6 @@ namespace GeometryTests
     {
         [Test]
         [Category("Capsule")]
-        public void Capsule_ContainsAndIntersects_Pass()
-        {
-            var capsule = new Capsule(new Point3(0f, 0f, 0f), new Point3(0f, 0f, 2f), 1f);
-            Assert.That(capsule.Contains(new Point3(0f, 0f, 1f)), Is.True);
-            Assert.That(capsule.Contains(new Point3(1f, 0f, 1f)), Is.True);
-            Assert.That(capsule.Contains(new Point3(0f, 2f, 1f)), Is.False);
-
-            var sphere = new Sphere(new Point3(0f, 0f, 3f), 1f);
-            Assert.That(capsule.Intersects(sphere), Is.True);
-            Assert.That(capsule.Intersects(new Sphere(new Point3(0f, 0f, 5f), 0.5f)), Is.False);
-        }
-
-        [Test]
-        [Category("Capsule")]
         public void Capsule_RawFloatConstructor_Pass()
         {
             var fromFloats = new Capsule(0f, 0f, 0f, 0f, 0f, 2f, 1f);

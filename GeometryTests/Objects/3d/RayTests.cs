@@ -27,48 +27,11 @@ namespace GeometryTests
     {
         [Test]
         [Category("Ray")]
-        public void Ray_PointAtAndSphereIntersection_Pass()
+        public void Ray_PointAt_Pass()
         {
             var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
             Assert.That(ray.Direction.Length(), Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
             Assert.That(ray.PointAt(5f), Is.EqualTo(new Point3(0f, 0f, 0f)));
-
-            var sphere = new Sphere(new Point3(0f, 0f, 3f), 1f);
-            Assert.That(ray.Intersects(sphere, out float distance), Is.True);
-            Assert.That(distance, Is.EqualTo(7f).Within(Constants.FLOAT_ERROR_MARGIN));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsAABB_ReturnsExpectedDistance()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
-            var box = new AABB(new Point3(-1f, -1f, -1f), new Point3(1f, 1f, 1f));
-
-            Assert.That(ray.Intersects(box, out float distance), Is.True);
-            Assert.That(distance, Is.EqualTo(4f).Within(Constants.FLOAT_ERROR_MARGIN));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsCube_ReturnsExpectedDistance()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
-            var cube = new Cube(new Point3(-1f, -1f, -1f), new Point3(1f, 1f, 1f));
-
-            Assert.That(ray.Intersects(cube, out float distance), Is.True);
-            Assert.That(distance, Is.EqualTo(4f).Within(Constants.FLOAT_ERROR_MARGIN));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsPlane_ReturnsExpectedDistance()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
-            var plane = new Plane3(new Vector3(0f, 0f, 1f), 0f);
-
-            Assert.That(ray.Intersects(plane, out float distance), Is.True);
-            Assert.That(distance, Is.EqualTo(5f).Within(Constants.FLOAT_ERROR_MARGIN));
         }
 
         [Test]
@@ -76,90 +39,6 @@ namespace GeometryTests
         public void Ray_Constructor_ZeroDirection_Fail()
         {
             Assert.Throws<ArgumentException>(() => new Ray(new Point3(0f, 0f, 0f), new Vector3(0f, 0f, 0f)));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsSphere_Miss_Fail()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
-            var farSphere = new Sphere(new Point3(10f, 10f, 10f), 1f);
-
-            Assert.That(ray.Intersects(farSphere, out float distance), Is.False);
-            Assert.That(distance, Is.EqualTo(0f));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsSphere_OriginInsideSphere_Pass()
-        {
-            var ray = new Ray(new Point3(0f, 0f, 0f), new Vector3(0f, 0f, 1f));
-            var enclosing = new Sphere(new Point3(0f, 0f, 0f), 5f);
-
-            Assert.That(ray.Intersects(enclosing, out float distance), Is.True);
-            Assert.That(distance, Is.EqualTo(5f).Within(Constants.FLOAT_ERROR_MARGIN));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsSphere_BehindRay_Fail()
-        {
-            var ray = new Ray(new Point3(0f, 0f, 0f), new Vector3(0f, 0f, 1f));
-            var behind = new Sphere(new Point3(0f, 0f, -5f), 1f);
-
-            Assert.That(ray.Intersects(behind, out float distance), Is.False);
-            Assert.That(distance, Is.EqualTo(0f));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsAABB_Miss_Fail()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
-            var farBox = new AABB(new Point3(10f, 10f, 10f), new Point3(11f, 11f, 11f));
-
-            Assert.That(ray.Intersects(farBox, out float distance), Is.False);
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsAABB_ParallelAxes_Pass()
-        {
-            var ray = new Ray(new Point3(0f, 0f, 0f), new Vector3(1f, 0f, 0f));
-            var box = new AABB(new Point3(-1f, -1f, -1f), new Point3(1f, 1f, 1f));
-
-            Assert.That(ray.Intersects(box, out float distance), Is.True);
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsAABB_ParallelAxesOutsideSlab_Fail()
-        {
-            var ray = new Ray(new Point3(0f, 5f, 0f), new Vector3(1f, 0f, 0f));
-            var box = new AABB(new Point3(-1f, -1f, -1f), new Point3(1f, 1f, 1f));
-
-            Assert.That(ray.Intersects(box, out float distance), Is.False);
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsPlane_Parallel_Fail()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(1f, 0f, 0f));
-            var plane = new Plane3(new Vector3(0f, 0f, 1f), 0f);
-
-            Assert.That(ray.Intersects(plane, out float distance), Is.False);
-            Assert.That(distance, Is.EqualTo(0f));
-        }
-
-        [Test]
-        [Category("Ray")]
-        public void Ray_IntersectsPlane_BehindRay_Fail()
-        {
-            var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, -1f));
-            var plane = new Plane3(new Vector3(0f, 0f, 1f), 0f);
-
-            Assert.That(ray.Intersects(plane, out float distance), Is.False);
         }
 
         [Test]

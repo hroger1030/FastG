@@ -17,6 +17,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
@@ -65,50 +66,26 @@ namespace Geometry
         /// <summary>
         /// Returns true if <paramref name="point"/> lies inside or on this sphere.
         /// </summary>
-        public bool Contains(Point3 point)
-        {
-            float dx = point.X - Center.X;
-            float dy = point.Y - Center.Y;
-            float dz = point.Z - Center.Z;
-
-            return (dx * dx + dy * dy + dz * dz) <= (Radius * Radius);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point3 point) => Collisions3d.Contains(this, point);
 
         /// <summary>
         /// Returns true if this sphere overlaps or touches <paramref name="other"/> (distance between centers &lt;= sum of radii).
         /// </summary>
-        public bool Intersects(Sphere other)
-        {
-            float dx = other.Center.X - Center.X;
-            float dy = other.Center.Y - Center.Y;
-            float dz = other.Center.Z - Center.Z;
-            float radiusSum = Radius + other.Radius;
-
-            return (dx * dx + dy * dy + dz * dz) <= (radiusSum * radiusSum);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Sphere other) => Collisions3d.Intersects(this, other);
 
         /// <summary>
         /// Gets whether or not a specified <see cref="Cube"/> intersects with this <see cref="Sphere"/>.
-        /// Delegates to <see cref="Cube.Intersects(Sphere)"/> so both directions share one algorithm.
         /// </summary>
-        public bool Intersects(Cube c)
-        {
-            return c.Intersects(this);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Cube c) => Collisions3d.Intersects(c, this);
 
         /// <summary>
         /// Returns true if all eight corners of <paramref name="c"/> lie inside or on this sphere (i.e. the cube is fully enclosed).
         /// </summary>
-        public bool Contains(Cube c)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                if (!Contains(c[i]))
-                    return false;
-            }
-
-            return true;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Cube c) => Collisions3d.Contains(this, c);
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Sphere"/> with the same center and radius.
@@ -121,6 +98,7 @@ namespace Geometry
         /// <summary>
         /// Returns true if the other sphere has the same center and radius (no tolerance).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Sphere other)
         {
             return Center.Equals(other.Center) && Radius.Equals(other.Radius);
@@ -129,11 +107,13 @@ namespace Geometry
         /// <summary>
         /// Returns true if both spheres have the same center and radius.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Sphere a, Sphere b) => a.Equals(b);
 
         /// <summary>
         /// Returns true if the spheres differ in center or radius.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Sphere a, Sphere b) => !a.Equals(b);
 
         /// <summary>

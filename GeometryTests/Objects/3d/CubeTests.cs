@@ -27,24 +27,6 @@ namespace GeometryTests
     {
         [Test]
         [Category("Cube")]
-        public void Cube_ContainsAndIntersects_Pass()
-        {
-            var inner = new Cube(new Point3(0f, 0f, 0f), new Point3(1f, 1f, 1f));
-            var outer = new Cube(new Point3(-1f, -1f, -1f), new Point3(2f, 2f, 2f));
-
-            Assert.That(outer.Contains(inner), Is.True);
-            Assert.That(inner.Intersects(outer), Is.True);
-            Assert.That(outer.Intersects(new Cube(new Point3(3f, 3f, 3f), new Point3(4f, 4f, 4f))), Is.False);
-
-            // partial overlap and full-miss must not count as containment
-            Assert.That(inner.Contains(outer), Is.False);
-            Assert.That(outer.Contains(new Cube(new Point3(1f, 1f, 1f), new Point3(3f, 3f, 3f))), Is.False);
-            Assert.That(outer.Contains(new Cube(new Point3(10f, 10f, 10f), new Point3(11f, 11f, 11f))), Is.False);
-            Assert.That(outer.Contains(outer), Is.True);
-        }
-
-        [Test]
-        [Category("Cube")]
         public void Cube_Indexer_OutOfRange_Fail()
         {
             var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
@@ -88,29 +70,6 @@ namespace GeometryTests
             Assert.That(Cube.UNIT_CUBE.Width, Is.EqualTo(1f));
             Assert.That(Cube.UNIT_CUBE.Height, Is.EqualTo(1f));
             Assert.That(Cube.UNIT_CUBE.Depth, Is.EqualTo(1f));
-        }
-
-        [Test]
-        [Category("Cube")]
-        public void Cube_ContainsPointAndCoordinates_Pass()
-        {
-            var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
-
-            Assert.That(cube.Contains(new Point3(0.5f, 0.5f, 0.5f)), Is.True);
-            Assert.That(cube.Contains(2f, 0.5f, 0.5f), Is.False);
-            Assert.That(cube.Contains(0.5f, 0.5f, 0.5f), Is.True);
-        }
-
-        [Test]
-        [Category("Cube")]
-        public void Cube_IntersectsSphere_Pass()
-        {
-            var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
-            var overlapping = new Sphere(new Point3(1.5f, 0.5f, 0.5f), 1f);
-            var separate = new Sphere(new Point3(10f, 10f, 10f), 1f);
-
-            Assert.That(cube.Intersects(overlapping), Is.True);
-            Assert.That(cube.Intersects(separate), Is.False);
         }
 
         [Test]

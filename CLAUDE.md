@@ -16,10 +16,11 @@ This repository contains a .NET solution for experimenting with a geometry libra
 
 - Keep changes compatible with .NET 10.
 - There should be only one namespace per project, and it should match the project name.
+- Naming: PascalCase for types/members, camelCase for locals/parameters, SCREAMING_SNAKE_CASE for constants and static readonly constant-like fields (e.g. `Constants.PI`, `Circle.UNIT_CIRCLE`). No other snake_case, ever.
+- For pairwise static methods over two different shape types (e.g. `Collisions2d.Intersects(Circle, Rectangle)`), order the parameters alphabetically by type name and implement the real logic exactly once at that signature. Never add a second overload just to accept the arguments in reverse order — if a caller has them backwards, have it swap the two arguments itself when it calls in. No redirect-only methods whose entire body is a call to a sibling overload with the arguments reversed.
 - No private functions allowed. methods should be public to allow unit tests to be written.
 - set up functions to use dependency injection to allow for easy testing.
-- Prefer small, focused updates to the genetic logic and parser code.
-- When changing behavior in the console app, keep the existing JSON parsing flow intact unless there is a specific reason to restructure it.
+- Prefer small, focused updates to the geometry logic.
 - If you add new features, update this file to reflect the new workflow.
 - Don't upgrade any nuget package version without asking first. You can point out out of date packages to the user.
 - Don't do write anything to git. You can read all you want, but no writes or commits.
