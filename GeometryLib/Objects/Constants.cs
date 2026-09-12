@@ -64,5 +64,33 @@ namespace Geometry
         /// The square root of 3. Shows up in equilateral triangle and hexagon math (e.g. isometric/hex grids).
         /// </summary>
         public const float SQRT_3 = 1.73205080757f;
+
+        // Precomputed inverses below. A multiply is cheaper than a divide on most hardware, so prefer
+        // "value * INV_X" over "value / X" on hot paths (normalizing angles, per-frame trig, etc).
+
+        /// <summary>
+        /// 1 / PI. Multiply by this instead of dividing by <see cref="PI"/>.
+        /// </summary>
+        public const float INV_PI = 1f / MathF.PI;
+
+        /// <summary>
+        /// 1 / (2 * PI). Multiply by this instead of dividing by <see cref="TWO_PI"/>. Handy for wrapping an angle into [0, 1) turns.
+        /// </summary>
+        public const float INV_TWO_PI = 1f / (2f * MathF.PI);
+
+        /// <summary>
+        /// 1 / (PI / 2), i.e. 2 / PI. Multiply by this instead of dividing by <see cref="HALF_PI"/>.
+        /// </summary>
+        public const float INV_HALF_PI = 1f / (MathF.PI / 2f);
+
+        /// <summary>
+        /// 1 / sqrt(2). Commonly used to normalize diagonal movement/vectors (e.g. 8-directional grid movement).
+        /// </summary>
+        public const float INV_SQRT_2 = 1f / SQRT_2;
+
+        /// <summary>
+        /// 1 / sqrt(3). Inverse of <see cref="SQRT_3"/>, for the same hex/triangle math without a divide.
+        /// </summary>
+        public const float INV_SQRT_3 = 1f / SQRT_3;
     }
 }

@@ -55,5 +55,30 @@ namespace GeometryTests
             Assert.That(Constants.SQRT_2, Is.EqualTo(MathF.Sqrt(2f)).Within(Constants.FLOAT_ERROR_MARGIN));
             Assert.That(Constants.SQRT_3, Is.EqualTo(MathF.Sqrt(3f)).Within(Constants.FLOAT_ERROR_MARGIN));
         }
+
+        [Test]
+        [Category("Constants")]
+        public void Constants_InversePiFamily_Pass()
+        {
+            Assert.That(Constants.INV_PI, Is.EqualTo(1f / MathF.PI).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(Constants.INV_TWO_PI, Is.EqualTo(1f / (2f * MathF.PI)).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(Constants.INV_HALF_PI, Is.EqualTo(1f / (MathF.PI / 2f)).Within(Constants.FLOAT_ERROR_MARGIN));
+
+            // multiplying by the inverse should match dividing by the original, within float error
+            Assert.That(5f * Constants.INV_PI, Is.EqualTo(5f / Constants.PI).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(5f * Constants.INV_TWO_PI, Is.EqualTo(5f / Constants.TWO_PI).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(5f * Constants.INV_HALF_PI, Is.EqualTo(5f / Constants.HALF_PI).Within(Constants.FLOAT_ERROR_MARGIN));
+        }
+
+        [Test]
+        [Category("Constants")]
+        public void Constants_InverseSquareRoots_Pass()
+        {
+            Assert.That(Constants.INV_SQRT_2, Is.EqualTo(1f / MathF.Sqrt(2f)).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(Constants.INV_SQRT_3, Is.EqualTo(1f / MathF.Sqrt(3f)).Within(Constants.FLOAT_ERROR_MARGIN));
+
+            Assert.That(Constants.SQRT_2 * Constants.INV_SQRT_2, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(Constants.SQRT_3 * Constants.INV_SQRT_3, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+        }
     }
 }
