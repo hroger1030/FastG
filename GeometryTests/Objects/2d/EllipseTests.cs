@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -39,10 +39,10 @@ namespace GeometryTests
         [Category("Ellipse")]
         public void Ellipse_InvalidRadii_Fail()
         {
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Ellipse(new Point2(0f, 0f), 0f, 1f)));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Ellipse(new Point2(0f, 0f), 1f, 0f)));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Ellipse(new Point2(0f, 0f), -1f, 1f)));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Ellipse(new Point2(0f, 0f), 1f, -1f)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(new Point2(0f, 0f), 0f, 1f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(new Point2(0f, 0f), 1f, 0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(new Point2(0f, 0f), -1f, 1f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(new Point2(0f, 0f), 1f, -1f));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace GeometryTests
         public void Ellipse_Perimeter_Pass()
         {
             var circleAsEllipse = new Ellipse(new Point2(0f, 0f), 2f, 2f);
-            Assert.That(circleAsEllipse.Perimeter, Is.EqualTo(2f * MathF.PI * 2f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(circleAsEllipse.Perimeter, Is.EqualTo(Constants.TWO_PI * 2f).Within(Constants.FLOAT_ERROR_MARGIN));
 
             var ellipse = new Ellipse(new Point2(0f, 0f), 3f, 1f);
             Assert.That(ellipse.Perimeter, Is.GreaterThan(0f));
@@ -73,8 +73,8 @@ namespace GeometryTests
             Assert.That(ellipse.Equals(differentRadiusY), Is.False);
 
             Assert.That(ellipse.Equals((object)same), Is.True);
-            Assert.That(ellipse.Equals((object)null), Is.False);
-            Assert.That(ellipse.Equals((object)"not an ellipse"), Is.False);
+            Assert.That(ellipse.Equals(null), Is.False);
+            Assert.That(ellipse.Equals("not an ellipse"), Is.False);
 
             Assert.That(ellipse.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }
@@ -97,7 +97,7 @@ namespace GeometryTests
             var fromPoint = new Ellipse(new Point2(1f, 2f), 3f, 4f);
 
             Assert.That(fromFloats, Is.EqualTo(fromPoint));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Ellipse(0f, 0f, 0f, 1f)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(0f, 0f, 0f, 1f));
         }
 
         [Test]

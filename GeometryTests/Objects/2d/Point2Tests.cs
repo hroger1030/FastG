@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -65,8 +65,8 @@ namespace GeometryTests
             Assert.That(p1.Equals((object)p1), Is.True);
             Assert.That(p1.Equals((object)p2), Is.True);
             Assert.That(p1.GetHashCode(), Is.EqualTo(p2.GetHashCode()));
-            Assert.That(p1.Equals((object)null), Is.False);
-            Assert.That(p1.Equals((object)"not a point"), Is.False);
+            Assert.That(p1.Equals(null), Is.False);
+            Assert.That(p1.Equals("not a point"), Is.False);
         }
 
         [Test]

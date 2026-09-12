@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -33,7 +33,7 @@ namespace GeometryTests
         [TestCase(-3.14159f)]
         public void Circle_TestNegativeRadius_Fail(float radius)
         {
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Circle(0, 0, radius)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Circle(0, 0, radius));
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace GeometryTests
         [TestCase(-3f)]
         public void Circle_PointAndRadiusConstructor_NonPositiveRadius_Fail(float radius)
         {
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Circle(new Point2(1f, 1f), radius)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Circle(new Point2(1f, 1f), radius));
         }
 
         [Test]
@@ -340,7 +340,7 @@ namespace GeometryTests
 
             Assert.That(c1.Equals((object)c2), Is.True);
             Assert.That(c1.GetHashCode(), Is.EqualTo(c2.GetHashCode()));
-            Assert.That(c1.Equals((object)null), Is.False);
+            Assert.That(c1.Equals(null), Is.False);
         }
 
         [Test]

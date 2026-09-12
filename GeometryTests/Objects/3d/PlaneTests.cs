@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -41,7 +41,7 @@ namespace GeometryTests
         [Category("Plane3")]
         public void Plane_ZeroNormal_Fail()
         {
-            Assert.Throws<ArgumentException>((Action)(() => new Plane3(new Vector3(0f, 0f, 0f), 0f)));
+            Assert.Throws<ArgumentException>(() => new Plane3(new Vector3(0f, 0f, 0f), 0f));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace GeometryTests
             var fromVector = new Plane3(new Vector3(0f, 0f, 1f), -5f);
 
             Assert.That(fromFloats, Is.EqualTo(fromVector));
-            Assert.Throws<ArgumentException>((Action)(() => new Plane3(0f, 0f, 0f, 1f)));
+            Assert.Throws<ArgumentException>(() => new Plane3(0f, 0f, 0f, 1f));
         }
 
         [Test]

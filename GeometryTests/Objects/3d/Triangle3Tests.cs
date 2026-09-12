@@ -45,20 +45,20 @@ namespace GeometryTests
         [Category("Triangle3")]
         public void Triangle3_TestDuplicatePoints_Fail()
         {
-            Assert.Throws<ArgumentException>((Action)(() => new Triangle3(
+            Assert.Throws<ArgumentException>(() => new Triangle3(
                 new Point3(0f, 0f, 0f),
                 new Point3(0f, 0f, 0f),
-                new Point3(1f, 1f, 1f))));
+                new Point3(1f, 1f, 1f)));
 
-            Assert.Throws<ArgumentException>((Action)(() => new Triangle3(
+            Assert.Throws<ArgumentException>(() => new Triangle3(
                 new Point3(0f, 0f, 0f),
                 new Point3(1f, 1f, 1f),
-                new Point3(1f, 1f, 1f))));
+                new Point3(1f, 1f, 1f)));
 
-            Assert.Throws<ArgumentException>((Action)(() => new Triangle3(
+            Assert.Throws<ArgumentException>(() => new Triangle3(
                 new Point3(1f, 1f, 1f),
                 new Point3(0f, 0f, 0f),
-                new Point3(1f, 1f, 1f))));
+                new Point3(1f, 1f, 1f)));
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace GeometryTests
             Assert.That(triangle.Equals(different), Is.False);
 
             Assert.That(triangle.Equals((object)same), Is.True);
-            Assert.That(triangle.Equals((object)null), Is.False);
-            Assert.That(triangle.Equals((object)"not a triangle"), Is.False);
+            Assert.That(triangle.Equals(null), Is.False);
+            Assert.That(triangle.Equals("not a triangle"), Is.False);
 
             Assert.That(triangle.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }
@@ -88,7 +88,7 @@ namespace GeometryTests
             var fromPoints = new Triangle3(new Point3(0f, 0f, 0f), new Point3(1f, 0f, 0f), new Point3(0f, 1f, 0f));
 
             Assert.That(fromFloats, Is.EqualTo(fromPoints));
-            Assert.Throws<ArgumentException>((Action)(() => new Triangle3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f)));
+            Assert.Throws<ArgumentException>(() => new Triangle3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f));
         }
 
         [Test]

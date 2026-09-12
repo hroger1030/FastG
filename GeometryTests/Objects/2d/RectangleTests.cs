@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -197,8 +197,8 @@ namespace GeometryTests
         [Category("Rectangle")]
         public void Rectangle_ConstructorInvalidDimensions_Fail()
         {
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Rectangle(0, 0, 0f, 1f)));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Rectangle(0, 0, 1f, 0f)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Rectangle(0, 0, 0f, 1f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Rectangle(0, 0, 1f, 0f));
         }
 
         [Test]

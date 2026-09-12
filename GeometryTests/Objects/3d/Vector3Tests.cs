@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -87,7 +87,7 @@ namespace GeometryTests
         {
             var v = new Vector3(0f, 0f, 0f);
 
-            Assert.Throws<DivideByZeroException>((Action)(() => Vector3.Normalize(v)));
+            Assert.Throws<DivideByZeroException>(() => Vector3.Normalize(v));
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace GeometryTests
             Assert.That(v1.Equals(v2), Is.True);
             Assert.That(v1.Equals((object)v2), Is.True);
             Assert.That(v1.GetHashCode(), Is.EqualTo(v2.GetHashCode()));
-            Assert.That(v1.Equals((object)null), Is.False);
+            Assert.That(v1.Equals(null), Is.False);
         }
 
         [Test]

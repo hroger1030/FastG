@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -48,7 +48,7 @@ namespace GeometryTests
         public void Cube_Indexer_OutOfRange_Fail()
         {
             var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
-            Assert.Throws<IndexOutOfRangeException>((Action)(() => { var point = cube[8]; }));
+            Assert.Throws<IndexOutOfRangeException>(() => { var point = cube[8]; });
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace GeometryTests
         {
             var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
 
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => { var result = cube * -1f; }));
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var result = cube * -1f; });
         }
 
         [Test]
@@ -147,8 +147,8 @@ namespace GeometryTests
             Assert.That(cube.Equals(different), Is.False);
 
             Assert.That(cube.Equals((object)same), Is.True);
-            Assert.That(cube.Equals((object)null), Is.False);
-            Assert.That(cube.Equals((object)"not a cube"), Is.False);
+            Assert.That(cube.Equals(null), Is.False);
+            Assert.That(cube.Equals("not a cube"), Is.False);
 
             Assert.That(cube.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -44,8 +44,8 @@ namespace GeometryTests
         [Category("Sphere")]
         public void Sphere_InvalidRadius_Fail()
         {
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Sphere(new Point3(0f, 0f, 0f), 0f)));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Sphere(new Point3(0f, 0f, 0f), -1f)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Sphere(new Point3(0f, 0f, 0f), 0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Sphere(new Point3(0f, 0f, 0f), -1f));
         }
 
         [Test]
@@ -87,8 +87,8 @@ namespace GeometryTests
             Assert.That(sphere.Equals(differentRadius), Is.False);
 
             Assert.That(sphere.Equals((object)same), Is.True);
-            Assert.That(sphere.Equals((object)null), Is.False);
-            Assert.That(sphere.Equals((object)"not a sphere"), Is.False);
+            Assert.That(sphere.Equals(null), Is.False);
+            Assert.That(sphere.Equals("not a sphere"), Is.False);
 
             Assert.That(sphere.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }
@@ -111,7 +111,7 @@ namespace GeometryTests
             var fromPoint = new Sphere(new Point3(1f, 2f, 3f), 4f);
 
             Assert.That(fromFloats, Is.EqualTo(fromPoint));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Sphere(0f, 0f, 0f, 0f)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Sphere(0f, 0f, 0f, 0f));
         }
 
         [Test]

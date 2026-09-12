@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -94,14 +94,14 @@ namespace GeometryTests
                 new Point2(2f, 2f),
             });
 
-            Assert.Throws<DivideByZeroException>((Action)(() => { var _ = polygon / 0f; }));
+            Assert.Throws<DivideByZeroException>(() => { var _ = polygon / 0f; });
         }
 
         [Test]
         [Category("Polygon")]
         public void Polygon_NullConstructor_Fail()
         {
-            Assert.Throws<ArgumentNullException>((Action)(() => new Polygon((List<Point2>)null)));
+            Assert.Throws<ArgumentNullException>(() => new Polygon((List<Point2>)null));
         }
 
         [Test]
@@ -129,18 +129,18 @@ namespace GeometryTests
             Assert.That(triangle.Equals(same), Is.True);
             Assert.That(triangle.Equals(reordered), Is.False);
             Assert.That(triangle.Equals(shorter), Is.False);
-            Assert.That(triangle.Equals((Polygon)null), Is.False);
+            Assert.That(triangle.Equals(null), Is.False);
             Assert.That(triangle.Equals((object)same), Is.True);
             Assert.That(triangle.Equals((object)null), Is.False);
-            Assert.That(triangle.Equals((object)"not a polygon"), Is.False);
+            Assert.That(triangle.Equals("not a polygon"), Is.False);
 
             Assert.That(triangle.GetHashCode(), Is.EqualTo(same.GetHashCode()));
 
             Assert.That(triangle == same, Is.True);
             Assert.That(triangle != reordered, Is.True);
             Assert.That((Polygon)null == (Polygon)null, Is.True);
-            Assert.That(triangle == (Polygon)null, Is.False);
-            Assert.That((Polygon)null == triangle, Is.False);
+            Assert.That(triangle == null, Is.False);
+            Assert.That(null == triangle, Is.False);
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace GeometryTests
             copy.Vertices.Add(new Point2(2f, 2f));
             Assert.That(original.Vertices.Count, Is.EqualTo(3));
 
-            Assert.Throws<ArgumentNullException>((Action)(() => new Polygon((Polygon)null)));
+            Assert.Throws<ArgumentNullException>(() => new Polygon((Polygon)null));
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -47,7 +47,7 @@ namespace GeometryTests
             var fromPoints = new Capsule(new Point3(0f, 0f, 0f), new Point3(0f, 0f, 2f), 1f);
 
             Assert.That(fromFloats, Is.EqualTo(fromPoints));
-            Assert.Throws<ArgumentOutOfRangeException>((Action)(() => new Capsule(0f, 0f, 0f, 0f, 0f, 2f, -1f)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Capsule(0f, 0f, 0f, 0f, 0f, 2f, -1f));
         }
 
         [Test]

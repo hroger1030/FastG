@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -60,10 +60,10 @@ namespace GeometryTests
             var v1 = new VectorN(2);
             var v2 = new VectorN(3);
 
-            Assert.Throws<InvalidOperationException>((Action)(() => { var _ = v1 + v2; }));
-            Assert.Throws<InvalidOperationException>((Action)(() => { var _ = v1 - v2; }));
-            Assert.Throws<InvalidOperationException>((Action)(() => VectorN.Dot(v1, v2)));
-            Assert.Throws<InvalidOperationException>((Action)(() => v1.Dot(v2)));
+            Assert.Throws<InvalidOperationException>(() => { var _ = v1 + v2; });
+            Assert.Throws<InvalidOperationException>(() => { var _ = v1 - v2; });
+            Assert.Throws<InvalidOperationException>(() => VectorN.Dot(v1, v2));
+            Assert.Throws<InvalidOperationException>(() => v1.Dot(v2));
         }
 
         [Test]
@@ -90,10 +90,10 @@ namespace GeometryTests
             Assert.That(v1.Equals(same), Is.True);
             Assert.That(v1.Equals(different), Is.False);
             Assert.That(v1.Equals(shorter), Is.False);
-            Assert.That(v1.Equals((VectorN)null), Is.False);
+            Assert.That(v1.Equals(null), Is.False);
             Assert.That(v1.Equals((object)same), Is.True);
             Assert.That(v1.Equals((object)null), Is.False);
-            Assert.That(v1.Equals((object)"not a vector"), Is.False);
+            Assert.That(v1.Equals("not a vector"), Is.False);
 
             // equal vectors must produce equal hash codes
             Assert.That(v1.GetHashCode(), Is.EqualTo(same.GetHashCode()));
@@ -101,8 +101,8 @@ namespace GeometryTests
             Assert.That(v1 == same, Is.True);
             Assert.That(v1 != different, Is.True);
             Assert.That((VectorN)null == (VectorN)null, Is.True);
-            Assert.That(v1 == (VectorN)null, Is.False);
-            Assert.That((VectorN)null == v1, Is.False);
+            Assert.That(v1 == null, Is.False);
+            Assert.That(null == v1, Is.False);
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -59,8 +59,8 @@ namespace GeometryTests
             Assert.That(line.Equals(different), Is.False);
 
             Assert.That(line.Equals((object)same), Is.True);
-            Assert.That(line.Equals((object)null), Is.False);
-            Assert.That(line.Equals((object)"not a line"), Is.False);
+            Assert.That(line.Equals(null), Is.False);
+            Assert.That(line.Equals("not a line"), Is.False);
 
             Assert.That(line.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }
@@ -71,7 +71,7 @@ namespace GeometryTests
         {
             Assert.That(Line2.UNIT_LINE.Point1, Is.EqualTo(Point2.ZERO));
             Assert.That(Line2.UNIT_LINE.Point2, Is.EqualTo(Point2.ONE));
-            Assert.That(Line2.UNIT_LINE.Length, Is.EqualTo(1.41421356f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(Line2.UNIT_LINE.Length, Is.EqualTo(Constants.SQRT_2).Within(Constants.FLOAT_ERROR_MARGIN));
         }
 
         [Test]

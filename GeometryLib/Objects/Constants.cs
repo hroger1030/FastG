@@ -81,7 +81,7 @@ namespace Geometry
         /// <summary>
         /// 1 / (PI / 2), i.e. 2 / PI. Multiply by this instead of dividing by <see cref="HALF_PI"/>.
         /// </summary>
-        public const float INV_HALF_PI = 1f / (MathF.PI / 2f);
+        public const float INV_HALF_PI = 1f / (MathF.PI * 0.5f);
 
         /// <summary>
         /// 1 / sqrt(2). Commonly used to normalize diagonal movement/vectors (e.g. 8-directional grid movement).

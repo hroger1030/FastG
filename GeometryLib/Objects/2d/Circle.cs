@@ -47,7 +47,7 @@ namespace Geometry
         public float Area => MathF.PI * Radius * Radius;
 
         [JsonIgnore]
-        public float Circumference => MathF.PI * 2 * Radius;
+        public float Circumference => Constants.TWO_PI * Radius;
 
         [JsonIgnore]
         public float Diameter => Radius * 2;

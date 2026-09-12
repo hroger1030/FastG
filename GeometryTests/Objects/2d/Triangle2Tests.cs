@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -29,7 +29,7 @@ namespace GeometryTests
         [Category("Triangle2")]
         public void Triangle_AreaPerimeterType_Pass()
         {
-            var equilateral = new Triangle2(new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0.5f, MathF.Sqrt(3) / 2f));
+            var equilateral = new Triangle2(new Point2(0f, 0f), new Point2(1f, 0f), new Point2(0.5f, Constants.SQRT_3 / 2f));
 
             Assert.That(equilateral.TriangleType, Is.EqualTo(Triangle2.Type.Equilateral));
             Assert.That(equilateral.Perimeter, Is.EqualTo(3f));
@@ -47,7 +47,7 @@ namespace GeometryTests
         public void Triangle_DuplicatePoint_Fail()
         {
             var p = new Point2(0f, 0f);
-            Assert.Throws<ArgumentException>((Action)(() => new Triangle2(p, p, new Point2(1f, 0f))));
+            Assert.Throws<ArgumentException>(() => new Triangle2(p, p, new Point2(1f, 0f)));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace GeometryTests
             var fromPoints = new Triangle2(new Point2(0f, 0f), new Point2(0f, 1f), new Point2(1f, 0f));
 
             Assert.That(fromFloats, Is.EqualTo(fromPoints));
-            Assert.Throws<ArgumentException>((Action)(() => new Triangle2(0f, 0f, 0f, 0f, 1f, 0f)));
+            Assert.Throws<ArgumentException>(() => new Triangle2(0f, 0f, 0f, 0f, 1f, 0f));
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -36,7 +36,7 @@ namespace GeometryTests
             Assert.That(p2.X == 5f && p2.Y == 7f && p2.Z == 9f, Is.True);
             Assert.That(p3.Equals(p1), Is.True);
             Assert.That(p1.Equals((object)p1), Is.True);
-            Assert.That(p1.Equals((object)null), Is.False);
+            Assert.That(p1.Equals(null), Is.False);
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace GeometryTests
 
             Assert.That(p.Equals((object)p), Is.True);
             Assert.That(p.Equals((object)same), Is.True);
-            Assert.That(p.Equals((object)null), Is.False);
-            Assert.That(p.Equals((object)"not a point"), Is.False);
+            Assert.That(p.Equals(null), Is.False);
+            Assert.That(p.Equals("not a point"), Is.False);
 
             Assert.That(p.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -42,7 +42,7 @@ namespace GeometryTests
         [Category("AABB")]
         public void AABB_InvalidBounds_Fail()
         {
-            Assert.Throws<ArgumentException>((Action)(() => new AABB(new Point3(1f, 1f, 1f), new Point3(0f, 0f, 0f))));
+            Assert.Throws<ArgumentException>(() => new AABB(new Point3(1f, 1f, 1f), new Point3(0f, 0f, 0f)));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace GeometryTests
             var fromPoints = new AABB(new Point3(0f, 0f, 0f), new Point3(1f, 2f, 3f));
 
             Assert.That(fromFloats, Is.EqualTo(fromPoints));
-            Assert.Throws<ArgumentException>((Action)(() => new AABB(0f, 0f, 0f, -1f, 1f, 1f)));
+            Assert.Throws<ArgumentException>(() => new AABB(0f, 0f, 0f, -1f, 1f, 1f));
         }
 
         [Test]

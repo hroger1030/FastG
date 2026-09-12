@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
@@ -86,8 +86,8 @@ namespace GeometryTests
         {
             var v = new Vector2(0f, 0f);
 
-            Assert.Throws<DivideByZeroException>((Action)(() => Vector2.Normalize(v)));
-            Assert.Throws<DivideByZeroException>((Action)(() => v.Normalize()));
+            Assert.Throws<DivideByZeroException>(() => Vector2.Normalize(v));
+            Assert.Throws<DivideByZeroException>(() => v.Normalize());
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace GeometryTests
         {
             var v = new Vector2(1f, 1f);
 
-            Assert.Throws<DivideByZeroException>((Action)(() => { var result = v / 0f; }));
+            Assert.Throws<DivideByZeroException>(() => { var result = v / 0f; });
         }
 
         [Test]
@@ -201,8 +201,8 @@ namespace GeometryTests
             Assert.That(v.Equals(different), Is.False);
 
             Assert.That(v.Equals((object)same), Is.True);
-            Assert.That(v.Equals((object)null), Is.False);
-            Assert.That(v.Equals((object)"not a vector"), Is.False);
+            Assert.That(v.Equals(null), Is.False);
+            Assert.That(v.Equals("not a vector"), Is.False);
 
             Assert.That(v.GetHashCode(), Is.EqualTo(same.GetHashCode()));
         }
