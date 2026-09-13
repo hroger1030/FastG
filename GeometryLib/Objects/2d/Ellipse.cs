@@ -3,16 +3,16 @@ The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
-(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
-publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
@@ -26,11 +26,11 @@ namespace Geometry
     /// </summary>
     public readonly struct Ellipse : I2d, IEquatable<Ellipse>
     {
-        // TODO: Extend this to a general ellipse object. 
+        // TODO: Extend this to a general ellipse object.
 
         /// <summary>
-        /// An ellipse X radius 1, Y radius 2 centered at the origin. 
-        /// Math doesn't often make use of a 'unit ellipse', but it is worth defining. 
+        /// An ellipse X radius 1, Y radius 2 centered at the origin.
+        /// Math doesn't often make use of a 'unit ellipse', but it is worth defining.
         /// </summary>
         public static readonly Ellipse REFERENCE_ELLIPSE = new(Point2.ZERO, 1f, 2f);
 
@@ -83,10 +83,15 @@ namespace Geometry
             : this(new Point2(centerX, centerY), radiusX, radiusY) { }
 
         /// <summary>
-        /// Returns true if <paramref name="point"/> lies inside or on this ellipse.
+        /// Returns a copy of the ellipse with both radii multiplied by <paramref name="scale"/> (center unchanged).
+        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Contains(Point2 point) => Collisions2d.Contains(this, point);
+        public Ellipse Scale(float scale)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
+
+            return new Ellipse(Center, RadiusX * scale, RadiusY * scale);
+        }
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is an <see cref="Ellipse"/> with the same center and semi-axes.
@@ -132,5 +137,14 @@ namespace Geometry
         {
             return $"Ellipse(Center: {Center}, RadiusX: {RadiusX}, RadiusY: {RadiusY})";
         }
+
+        // The method below is a thin redirect into Collisions2d, kept here only for call-site convenience
+        // (e.g. ellipse.Contains(point) instead of Collisions2d.Contains(ellipse, point)). The real logic lives there.
+
+        /// <summary>
+        /// Returns true if <paramref name="point"/> lies inside or on this ellipse.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point2 point) => Collisions2d.Contains(this, point);
     }
 }

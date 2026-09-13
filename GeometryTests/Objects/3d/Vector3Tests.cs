@@ -136,7 +136,7 @@ namespace GeometryTests
             var x = new Vector3(1f, 0f, 0f);
             var y = new Vector3(0f, 1f, 0f);
             Assert.That(x.Dot(y), Is.EqualTo(0f));
-            Assert.That(v1.Dot(v1), Is.EqualTo(v1.LengthSquared()));
+            Assert.That(v1.Dot(v1), Is.EqualTo(v1.LengthSquared));
         }
 
         [Test]
@@ -159,14 +159,23 @@ namespace GeometryTests
         {
             var v = new Vector3(2f, 3f, 6f);
 
-            Assert.That(v.LengthSquared(), Is.EqualTo(49f));
-            Assert.That(v.Length(), Is.EqualTo(7f));
+            Assert.That(v.LengthSquared, Is.EqualTo(49f));
+            Assert.That(v.Length, Is.EqualTo(7f));
 
             var a = new Vector3(1f, 2f, 3f);
             var b = new Vector3(1f, 6f, 6f);
             Assert.That(a.DistanceSquaredTo(b), Is.EqualTo(25f));
             Assert.That(Vector3.DistanceSquaredTo(a, b), Is.EqualTo(25f));
             Assert.That(a.DistanceTo(b), Is.EqualTo(5f));
+        }
+
+        [Test]
+        [Category("Vector3")]
+        public void Vector3_I1dLength_Pass()
+        {
+            I1d v = new Vector3(2f, 3f, 6f);
+
+            Assert.That(v.Length, Is.EqualTo(7f));
         }
     }
 }

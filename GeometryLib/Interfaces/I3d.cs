@@ -3,7 +3,7 @@
     /// <summary>
     /// Implemented by three-dimensional shapes that have a measurable volume and surface area.
     /// </summary>
-    interface I3d
+    public interface I3d
     {
         /// <summary>
         /// The volume enclosed by the shape.

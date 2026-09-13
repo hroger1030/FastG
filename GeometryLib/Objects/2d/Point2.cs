@@ -135,6 +135,33 @@ namespace Geometry
         }
 
         /// <summary>
+        /// Returns this point rotated <paramref name="radians"/> about <paramref name="pivot"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2 RotateAround(Point2 pivot, float radians)
+        {
+            return RotateAround(this, pivot, radians);
+        }
+
+        /// <summary>
+        /// Returns <paramref name="point"/> rotated <paramref name="radians"/> about <paramref name="pivot"/>,
+        /// counter-clockwise from the +X axis - the same convention as <see cref="Vector2(float)"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point2 RotateAround(Point2 point, Point2 pivot, float radians)
+        {
+            float cos = MathF.Cos(radians);
+            float sin = MathF.Sin(radians);
+
+            float dx = point.X - pivot.X;
+            float dy = point.Y - pivot.Y;
+
+            return new Point2(
+                pivot.X + (dx * cos) - (dy * sin),
+                pivot.Y + (dx * sin) + (dy * cos));
+        }
+
+        /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Point2"/> at the same coordinates.
         /// </summary>
         public override bool Equals(object obj)

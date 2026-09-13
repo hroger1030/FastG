@@ -3,16 +3,16 @@ The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
-(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
-publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
@@ -44,7 +44,7 @@ namespace Geometry
         /// </summary>
         public Ray(Point3 origin, Vector3 direction)
         {
-            if (direction.LengthSquared() == 0f)
+            if (direction.LengthSquared == 0f)
                 throw new ArgumentException("Direction vector must be non-zero.", nameof(direction));
 
             Origin = origin;
@@ -69,37 +69,6 @@ namespace Geometry
                 Origin.Y + Direction.Y * distance,
                 Origin.Z + Direction.Z * distance);
         }
-
-        /// <summary>
-        /// Tests for intersection with a sphere. On a hit, returns true and sets <paramref name="distance"/> to the
-        /// distance along the ray of the nearest non-negative intersection; otherwise returns false and sets it to 0.
-        /// An origin inside the sphere counts as a hit at the exit point.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Sphere sphere, out float distance) => Collisions3d.Intersects(this, sphere, out distance);
-
-        /// <summary>
-        /// Tests for intersection with an axis-aligned box using the slab method. On a hit, returns true and sets
-        /// <paramref name="distance"/> to the entry distance along the ray (clamped to 0 when the origin is inside);
-        /// otherwise returns false and sets it to 0.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(AABB aabb, out float distance) => Collisions3d.Intersects(this, aabb, out distance);
-
-        /// <summary>
-        /// Tests for intersection with a cube by treating it as an axis-aligned box. See <see cref="Intersects(AABB, out float)"/>
-        /// for the meaning of <paramref name="distance"/>.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Cube cube, out float distance) => Collisions3d.Intersects(this, cube, out distance);
-
-        /// <summary>
-        /// Tests for intersection with a plane. On a hit in front of the origin, returns true and sets
-        /// <paramref name="distance"/> to the distance along the ray; returns false (distance 0) when the ray is
-        /// parallel to the plane or the intersection lies behind the origin.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Plane3 plane, out float distance) => Collisions3d.Intersects(this, plane, out distance);
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Ray"/> with the same origin and direction.
@@ -145,5 +114,57 @@ namespace Geometry
         {
             return $"Ray(Origin: {Origin}, Direction: {Direction})";
         }
+
+        /// <summary>
+        /// Tests for intersection with a sphere. On a hit, returns (true, distance) where distance is along the
+        /// ray to the nearest non-negative intersection; otherwise returns (false, 0). An origin inside the sphere
+        /// counts as a hit at the exit point.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(Sphere sphere) => Collisions3d.Intersects(this, sphere);
+
+        /// <summary>
+        /// Tests for intersection with an axis-aligned box using the slab method. On a hit, returns (true, distance)
+        /// where distance is the entry distance along the ray (clamped to 0 when the origin is inside); otherwise
+        /// returns (false, 0).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(AABB aabb) => Collisions3d.Intersects(this, aabb);
+
+        /// <summary>
+        /// Tests for intersection with a cube by treating it as an axis-aligned box. See <see cref="Intersects(AABB)"/>
+        /// for the meaning of the returned distance.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(Cube cube) => Collisions3d.Intersects(this, cube);
+
+        /// <summary>
+        /// Tests for intersection with a plane. On a hit in front of the origin, returns (true, distance) along
+        /// the ray; returns (false, 0) when the ray is parallel to the plane or the intersection lies behind the origin.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(Plane3 plane) => Collisions3d.Intersects(this, plane);
+
+        /// <summary>
+        /// Tests for intersection with a triangle using the Möller–Trumbore algorithm. On a hit in front of the
+        /// origin, returns (true, distance) along the ray; returns (false, 0) for a miss, a ray parallel to the
+        /// triangle's plane, or an intersection behind the origin.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(Triangle3 triangle) => Collisions3d.Intersects(this, triangle);
+
+        /// <summary>
+        /// Tests for intersection with a capsule. On a hit, returns (true, distance) along the ray to the nearest
+        /// intersection; otherwise returns (false, 0).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(Capsule capsule) => Collisions3d.Intersects(this, capsule);
+
+        /// <summary>
+        /// Tests for intersection with a cylinder. On a hit, returns (true, distance) along the ray to the nearest
+        /// intersection; otherwise returns (false, 0).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (bool Hit, float Distance) Intersects(Cylinder cylinder) => Collisions3d.Intersects(this, cylinder);
     }
 }

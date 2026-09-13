@@ -76,8 +76,8 @@ namespace GeometryTests
             var v = new Vector2(3f, 4f);
             var normalized = Vector2.Normalize(v);
 
-            Assert.That(normalized.Length(), Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
-            Assert.That(v.Length(), Is.EqualTo(5f));
+            Assert.That(normalized.Length, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(v.Length, Is.EqualTo(5f));
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace GeometryTests
             var right = new Vector2(1f, 0f);
             var up = new Vector2(0f, 1f);
             Assert.That(right.Dot(up), Is.EqualTo(0f));
-            Assert.That(v1.Dot(v1), Is.EqualTo(v1.LengthSquared()));
+            Assert.That(v1.Dot(v1), Is.EqualTo(v1.LengthSquared));
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace GeometryTests
             var v = new Vector2(3f, 4f);
             var unit = v.Normalize();
 
-            Assert.That(unit.Length(), Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(unit.Length, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
         }
 
         [Test]
@@ -220,8 +220,17 @@ namespace GeometryTests
         {
             var v = new Vector2(3f, 4f);
 
-            Assert.That(v.LengthSquared(), Is.EqualTo(25f));
-            Assert.That(v.Length(), Is.EqualTo(5f));
+            Assert.That(v.LengthSquared, Is.EqualTo(25f));
+            Assert.That(v.Length, Is.EqualTo(5f));
+        }
+
+        [Test]
+        [Category("Vector2")]
+        public void Vector2_I1dLength_Pass()
+        {
+            I1d v = new Vector2(3f, 4f);
+
+            Assert.That(v.Length, Is.EqualTo(5f));
         }
     }
 }

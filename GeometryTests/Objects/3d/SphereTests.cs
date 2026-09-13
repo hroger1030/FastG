@@ -86,6 +86,30 @@ namespace GeometryTests
 
         [Test]
         [Category("Sphere")]
+        [TestCase(2f)]
+        [TestCase(0.5f)]
+        public void Sphere_Scale_Pass(float scale)
+        {
+            var sphere = new Sphere(new Point3(1f, 2f, 3f), 2f);
+            var scaled = sphere.Scale(scale);
+
+            Assert.That(scaled.Center, Is.EqualTo(sphere.Center));
+            Assert.That(scaled.Radius, Is.EqualTo(2f * scale));
+        }
+
+        [Test]
+        [Category("Sphere")]
+        [TestCase(0f)]
+        [TestCase(-1f)]
+        public void Sphere_Scale_ThrowsForNonPositiveScale_Fail(float scale)
+        {
+            var sphere = new Sphere(new Point3(0f, 0f, 0f), 2f);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => sphere.Scale(scale));
+        }
+
+        [Test]
+        [Category("Sphere")]
         public void Sphere_ToString_Pass()
         {
             var sphere = new Sphere(1f, 2f, 3f, 4f);

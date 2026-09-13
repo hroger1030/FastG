@@ -100,6 +100,31 @@ namespace GeometryTests
 
         [Test]
         [Category("Ellipse")]
+        [TestCase(2f)]
+        [TestCase(0.5f)]
+        public void Ellipse_Scale_Pass(float scale)
+        {
+            var ellipse = new Ellipse(new Point2(1f, 2f), 3f, 4f);
+            var scaled = ellipse.Scale(scale);
+
+            Assert.That(scaled.Center, Is.EqualTo(ellipse.Center));
+            Assert.That(scaled.RadiusX, Is.EqualTo(3f * scale));
+            Assert.That(scaled.RadiusY, Is.EqualTo(4f * scale));
+        }
+
+        [Test]
+        [Category("Ellipse")]
+        [TestCase(0f)]
+        [TestCase(-1f)]
+        public void Ellipse_Scale_ThrowsForNonPositiveScale_Fail(float scale)
+        {
+            var ellipse = new Ellipse(Point2.ZERO, 2f, 1f);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => ellipse.Scale(scale));
+        }
+
+        [Test]
+        [Category("Ellipse")]
         public void Ellipse_ToString_Pass()
         {
             var ellipse = new Ellipse(1f, 2f, 3f, 4f);

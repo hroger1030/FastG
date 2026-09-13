@@ -3,16 +3,16 @@ The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
-(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
-publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
@@ -101,6 +101,13 @@ namespace Geometry
         }
 
         /// <summary>
+        /// The centroid: the average of the three vertices. Always lies inside the triangle, unlike the
+        /// circumcenter or orthocenter, which can fall outside an obtuse triangle.
+        /// </summary>
+        [JsonIgnore]
+        public Point2 Centroid => new((A.X + B.X + C.X) / 3f, (A.Y + B.Y + C.Y) / 3f);
+
+        /// <summary>
         /// Classifies this triangle as <see cref="Type.Equilateral"/>, <see cref="Type.Isosceles"/> or <see cref="Type.Scalene"/>
         /// based on exact side-length equality.
         /// </summary>
@@ -143,6 +150,22 @@ namespace Geometry
         /// </summary>
         public Triangle2(float ax, float ay, float bx, float by, float cx, float cy)
             : this(new Point2(ax, ay), new Point2(bx, by), new Point2(cx, cy)) { }
+
+        /// <summary>
+        /// Returns a copy of this triangle scaled uniformly about its <see cref="Centroid"/> by <paramref name="scale"/>.
+        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
+        /// </summary>
+        public Triangle2 Scale(float scale)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
+
+            var centroid = Centroid;
+
+            return new Triangle2(
+                new Point2(centroid.X + (A.X - centroid.X) * scale, centroid.Y + (A.Y - centroid.Y) * scale),
+                new Point2(centroid.X + (B.X - centroid.X) * scale, centroid.Y + (B.Y - centroid.Y) * scale),
+                new Point2(centroid.X + (C.X - centroid.X) * scale, centroid.Y + (C.Y - centroid.Y) * scale));
+        }
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Triangle2"/> with the same vertices in the same order.
@@ -188,5 +211,17 @@ namespace Geometry
         {
             return $"Triangle2(A: {A}, B: {B}, C: {C})";
         }
+
+        /// <summary>
+        /// Returns true if <paramref name="point"/> lies inside or on the edges of this triangle.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point2 point) => Collisions2d.Contains(this, point);
+
+        /// <summary>
+        /// Returns true if this triangle overlaps or touches <paramref name="other"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Triangle2 other) => Collisions2d.Intersects(this, other);
     }
 }

@@ -75,6 +75,51 @@ namespace GeometryTests
 
         [Test]
         [Category("Triangle2")]
+        public void Triangle_Centroid_Pass()
+        {
+            var triangle = new Triangle2(new Point2(0f, 0f), new Point2(6f, 0f), new Point2(0f, 3f));
+
+            Assert.That(triangle.Centroid, Is.EqualTo(new Point2(2f, 1f)));
+
+            // the centroid of an equilateral triangle sits directly below its apex, one third of the way up
+            var equilateral = new Triangle2(new Point2(0f, 0f), new Point2(2f, 0f), new Point2(1f, Constants.SQRT_3));
+            Assert.That(equilateral.Centroid.X, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(equilateral.Centroid.Y, Is.EqualTo(Constants.SQRT_3 / 3f).Within(Constants.FLOAT_ERROR_MARGIN));
+
+            // the centroid must always lie inside the triangle
+            Assert.That(triangle.Contains(triangle.Centroid), Is.True);
+        }
+
+        [Test]
+        [Category("Triangle2")]
+        [TestCase(2f)]
+        [TestCase(0.5f)]
+        public void Triangle2_Scale_Pass(float scale)
+        {
+            var triangle = new Triangle2(new Point2(0f, 0f), new Point2(6f, 0f), new Point2(0f, 3f));
+            var centroid = triangle.Centroid;
+            var scaled = triangle.Scale(scale);
+
+            Assert.That(scaled.Centroid.X, Is.EqualTo(centroid.X).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(scaled.Centroid.Y, Is.EqualTo(centroid.Y).Within(Constants.FLOAT_ERROR_MARGIN));
+
+            Assert.That(scaled.A.X, Is.EqualTo(centroid.X + (triangle.A.X - centroid.X) * scale).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(scaled.A.Y, Is.EqualTo(centroid.Y + (triangle.A.Y - centroid.Y) * scale).Within(Constants.FLOAT_ERROR_MARGIN));
+        }
+
+        [Test]
+        [Category("Triangle2")]
+        [TestCase(0f)]
+        [TestCase(-1f)]
+        public void Triangle2_Scale_ThrowsForNonPositiveScale_Fail(float scale)
+        {
+            var triangle = new Triangle2(new Point2(0f, 0f), new Point2(6f, 0f), new Point2(0f, 3f));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => triangle.Scale(scale));
+        }
+
+        [Test]
+        [Category("Triangle2")]
         public void Triangle_ToString_Pass()
         {
             var triangle = new Triangle2(0f, 0f, 0f, 1f, 1f, 0f);

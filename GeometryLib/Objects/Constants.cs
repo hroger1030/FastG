@@ -18,7 +18,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Geometry
 {
-    public class Constants
+    public static class Constants
     {
         /// <summary>
         /// Float math can be a little inaccurate, so this is the margin of error we will use when comparing floats.
@@ -28,32 +28,37 @@ namespace Geometry
         /// <summary>
         /// Ratio of a circle's circumference to its diameter. Same value as <see cref="MathF.PI"/>, provided here for convenience.
         /// </summary>
-        public const float PI = MathF.PI;
+        public const float PI = 3.14159265f;
 
         /// <summary>
         /// A full turn, in radians (360 degrees). Useful for wrapping angles and full-circle rotations.
         /// </summary>
-        public const float TWO_PI = 2f * MathF.PI;
+        public const float TWO_PI = 6.283185307f;
+
+        /// <summary>
+        /// Alternate alias for <see cref="TWO_PI"/>, should the user prefer that name.
+        /// </summary>
+        public const float TAU = 6.283185307f;
 
         /// <summary>
         /// A quarter turn, in radians (90 degrees). Half of <see cref="PI"/>.
         /// </summary>
-        public const float HALF_PI = MathF.PI / 2f;
+        public const float HALF_PI = PI * 0.5f;
 
         /// <summary>
         /// An eighth of a turn, in radians (45 degrees). Quarter of <see cref="PI"/>.
         /// </summary>
-        public const float QUARTER_PI = MathF.PI / 4f;
+        public const float QUARTER_PI = PI * 0.25f;
 
         /// <summary>
         /// Multiply a degree value by this to convert it to radians.
         /// </summary>
-        public const float DEG_TO_RAD = MathF.PI / 180f;
+        public const float DEG_TO_RAD = PI / 180f;
 
         /// <summary>
         /// Multiply a radian value by this to convert it to degrees.
         /// </summary>
-        public const float RAD_TO_DEG = 180f / MathF.PI;
+        public const float RAD_TO_DEG = 180f / PI;
 
         /// <summary>
         /// The square root of 2. Commonly used for diagonal distances/movement, e.g. on a grid.
@@ -71,17 +76,17 @@ namespace Geometry
         /// <summary>
         /// 1 / PI. Multiply by this instead of dividing by <see cref="PI"/>.
         /// </summary>
-        public const float INV_PI = 1f / MathF.PI;
+        public const float INV_PI = 1f / PI;
 
         /// <summary>
         /// 1 / (2 * PI). Multiply by this instead of dividing by <see cref="TWO_PI"/>. Handy for wrapping an angle into [0, 1) turns.
         /// </summary>
-        public const float INV_TWO_PI = 1f / (2f * MathF.PI);
+        public const float INV_TWO_PI = 1f / TWO_PI;
 
         /// <summary>
         /// 1 / (PI / 2), i.e. 2 / PI. Multiply by this instead of dividing by <see cref="HALF_PI"/>.
         /// </summary>
-        public const float INV_HALF_PI = 1f / (MathF.PI * 0.5f);
+        public const float INV_HALF_PI = 1f / HALF_PI;
 
         /// <summary>
         /// 1 / sqrt(2). Commonly used to normalize diagonal movement/vectors (e.g. 8-directional grid movement).

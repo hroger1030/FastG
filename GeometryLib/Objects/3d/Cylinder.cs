@@ -21,7 +21,14 @@ using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
-    public readonly struct Capsule : I3d, IEquatable<Capsule>
+    /// <summary>
+    /// A right circular cylinder: a flat-capped tube of constant <see cref="Radius"/> running along the
+    /// segment from <see cref="PointA"/> to <see cref="PointB"/>. Unlike <see cref="Capsule"/>, the caps are
+    /// flat disks, not hemispheres, so a point exactly at <see cref="PointA"/> or <see cref="PointB"/> and
+    /// within <see cref="Radius"/> of the axis is on the cylinder, but a point just beyond either endpoint
+    /// along the axis is not, no matter how close it is to the axis.
+    /// </summary>
+    public readonly struct Cylinder : I3d, IEquatable<Cylinder>
     {
         public Point3 PointA { get; init; }
 
@@ -30,45 +37,35 @@ namespace Geometry
         public float Radius { get; init; }
 
         /// <summary>
-        /// The volume enclosed by the capsule: a cylinder spanning the distance between the two endpoints,
-        /// capped by a full sphere - the two hemispherical ends, of the same radius, joined together.
+        /// The distance between <see cref="PointA"/> and <see cref="PointB"/>.
         /// </summary>
         [JsonIgnore]
-        public float Volume
-        {
-            get
-            {
-                float height = new Vector3(PointA, PointB).Length;
-                return (Constants.PI * Radius * Radius * height) + ((4f / 3f) * Constants.PI * Radius * Radius * Radius);
-            }
-        }
+        public float Height => new Vector3(PointA, PointB).Length;
 
         /// <summary>
-        /// The total surface area of the capsule: the cylindrical body's lateral surface, plus the full sphere
-        /// surface formed by the two hemispherical ends joined together.
+        /// The volume of the cylinder (PI * r^2 * height).
         /// </summary>
         [JsonIgnore]
-        public float SurfaceArea
-        {
-            get
-            {
-                float height = new Vector3(PointA, PointB).Length;
-                return (2f * Constants.PI * Radius * height) + (4f * Constants.PI * Radius * Radius);
-            }
-        }
+        public float Volume => Constants.PI * Radius * Radius * Height;
 
         /// <summary>
-        /// Creates a capsule: the set of points within <paramref name="radius"/> of the segment from <paramref name="pointA"/> to <paramref name="pointB"/>.
-        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="radius"/> is negative, or
-        /// <see cref="ArgumentException"/> if <paramref name="pointA"/> and <paramref name="pointB"/> are the
-        /// same point - that shape is a <see cref="Sphere"/>, so construct one of those directly instead.
+        /// The total surface area of the cylinder, including both end caps (2 * PI * r * height + 2 * PI * r^2).
         /// </summary>
-        public Capsule(Point3 pointA, Point3 pointB, float radius)
+        [JsonIgnore]
+        public float SurfaceArea => (2f * Constants.PI * Radius * Height) + (2f * Constants.PI * Radius * Radius);
+
+        /// <summary>
+        /// Creates a cylinder of the given <paramref name="radius"/> along the segment from <paramref name="pointA"/>
+        /// to <paramref name="pointB"/>. Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="radius"/>
+        /// is zero or negative, or <see cref="ArgumentException"/> if <paramref name="pointA"/> and
+        /// <paramref name="pointB"/> are the same point - a cylinder cannot have zero height.
+        /// </summary>
+        public Cylinder(Point3 pointA, Point3 pointB, float radius)
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(radius);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(radius, 0f);
 
             if (pointA.Equals(pointB))
-                throw new ArgumentException("a capsule's two endpoints cannot be the same point.", nameof(pointB));
+                throw new ArgumentException("a cylinder's two endpoints cannot be the same point - it would have zero height", nameof(pointB));
 
             PointA = pointA;
             PointB = pointB;
@@ -76,20 +73,20 @@ namespace Geometry
         }
 
         /// <summary>
-        /// Creates a capsule from the raw coordinates of its two segment endpoints and a radius.
-        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="radius"/> is negative, or
+        /// Creates a cylinder from the raw coordinates of its two endpoints and a radius.
+        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="radius"/> is zero or negative, or
         /// <see cref="ArgumentException"/> if the two endpoints are the same point.
         /// </summary>
-        public Capsule(float pointAX, float pointAY, float pointAZ, float pointBX, float pointBY, float pointBZ, float radius)
+        public Cylinder(float pointAX, float pointAY, float pointAZ, float pointBX, float pointBY, float pointBZ, float radius)
             : this(new Point3(pointAX, pointAY, pointAZ), new Point3(pointBX, pointBY, pointBZ), radius) { }
 
         /// <summary>
-        /// Returns a copy of this capsule scaled uniformly about the midpoint of <see cref="PointA"/> and
+        /// Returns a copy of this cylinder scaled uniformly about the midpoint of <see cref="PointA"/> and
         /// <see cref="PointB"/> - both the radius and the distance between the endpoints are multiplied by
         /// <paramref name="scale"/>. Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/>
         /// is zero or negative.
         /// </summary>
-        public Capsule Scale(float scale)
+        public Cylinder Scale(float scale)
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
 
@@ -97,25 +94,25 @@ namespace Geometry
             float centerY = (PointA.Y + PointB.Y) / 2f;
             float centerZ = (PointA.Z + PointB.Z) / 2f;
 
-            return new Capsule(
+            return new Cylinder(
                 new Point3(centerX + (PointA.X - centerX) * scale, centerY + (PointA.Y - centerY) * scale, centerZ + (PointA.Z - centerZ) * scale),
                 new Point3(centerX + (PointB.X - centerX) * scale, centerY + (PointB.Y - centerY) * scale, centerZ + (PointB.Z - centerZ) * scale),
                 Radius * scale);
         }
 
         /// <summary>
-        /// Returns true if <paramref name="obj"/> is a <see cref="Capsule"/> with the same endpoints and radius.
+        /// Returns true if <paramref name="obj"/> is a <see cref="Cylinder"/> with the same endpoints and radius.
         /// </summary>
         public override bool Equals(object obj)
         {
-            return obj is Capsule other && Equals(other);
+            return obj is Cylinder other && Equals(other);
         }
 
         /// <summary>
-        /// Returns true if the other capsule has the same endpoints (in the same order) and radius (no tolerance).
+        /// Returns true if the other cylinder has the same endpoints (in the same order) and radius (no tolerance).
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(Capsule other)
+        public bool Equals(Cylinder other)
         {
             return PointA.Equals(other.PointA)
                 && PointB.Equals(other.PointB)
@@ -123,16 +120,16 @@ namespace Geometry
         }
 
         /// <summary>
-        /// Returns true if both capsules have the same endpoints and radius.
+        /// Returns true if both cylinders have the same endpoints and radius.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Capsule a, Capsule b) => a.Equals(b);
+        public static bool operator ==(Cylinder a, Cylinder b) => a.Equals(b);
 
         /// <summary>
-        /// Returns true if the capsules differ in either endpoint or radius.
+        /// Returns true if the cylinders differ in either endpoint or radius.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Capsule a, Capsule b) => !a.Equals(b);
+        public static bool operator !=(Cylinder a, Cylinder b) => !a.Equals(b);
 
         /// <summary>
         /// Returns a hash code derived from the two endpoints and the radius.
@@ -143,45 +140,44 @@ namespace Geometry
         }
 
         /// <summary>
-        /// Returns a string of the form "Capsule(PointA: (x, y, z), PointB: (x, y, z), Radius: r)".
+        /// Returns a string of the form "Cylinder(PointA: (x, y, z), PointB: (x, y, z), Radius: r)".
         /// </summary>
         public override string ToString()
         {
-            return $"Capsule(PointA: {PointA}, PointB: {PointB}, Radius: {Radius})";
+            return $"Cylinder(PointA: {PointA}, PointB: {PointB}, Radius: {Radius})";
         }
 
         /// <summary>
-        /// Returns true if <paramref name="point"/> lies inside or on this capsule.
+        /// Returns true if <paramref name="point"/> lies inside or on this cylinder.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(Point3 point) => Collisions3d.Contains(this, point);
 
         /// <summary>
-        /// Returns true if this capsule overlaps or touches <paramref name="sphere"/>, tested via the closest point
-        /// on the capsule's core segment to the sphere center.
+        /// Returns true if this cylinder overlaps or touches <paramref name="sphere"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Intersects(Sphere sphere) => Collisions3d.Intersects(this, sphere);
 
         /// <summary>
-        /// Returns true if this capsule overlaps or touches <paramref name="aabb"/>. See
-        /// <see cref="Collisions3d.Intersects(AABB, Capsule)"/> for the sphere-and-box decomposition this uses.
+        /// Returns true if this cylinder overlaps or touches <paramref name="aabb"/>. See
+        /// <see cref="Collisions3d.Intersects(AABB, Cylinder)"/> for the exact-AABB approach this uses.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Intersects(AABB aabb) => Collisions3d.Intersects(aabb, this);
 
         /// <summary>
-        /// Returns true if this capsule overlaps or touches <paramref name="cube"/>. See
-        /// <see cref="Collisions3d.Intersects(AABB, Capsule)"/> for the sphere-and-box decomposition this uses.
+        /// Returns true if this cylinder overlaps or touches <paramref name="cube"/>. See
+        /// <see cref="Collisions3d.Intersects(AABB, Cylinder)"/> for the exact-AABB approach this uses.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Cube cube) => Collisions3d.Intersects(this, cube);
+        public bool Intersects(Cube cube) => Collisions3d.Intersects(cube, this);
 
         /// <summary>
-        /// Returns true if this capsule overlaps or touches <paramref name="other"/> (the shortest distance between
-        /// their core segments is no greater than the sum of their radii).
+        /// Returns true if this cylinder overlaps or touches <paramref name="other"/>. See
+        /// <see cref="Collisions3d.Intersects(Cylinder, Cylinder)"/> for the capsule-approximation this uses.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Capsule other) => Collisions3d.Intersects(this, other);
+        public bool Intersects(Cylinder other) => Collisions3d.Intersects(this, other);
     }
 }

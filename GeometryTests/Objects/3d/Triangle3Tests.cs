@@ -39,6 +39,10 @@ namespace GeometryTests
             Assert.That(triangle.C.Y, Is.EqualTo(4f));
             Assert.That(triangle.Perimeter, Is.EqualTo(12f));
             Assert.That(triangle.Area, Is.EqualTo(6f));
+
+            I2d asI2d = triangle;
+            Assert.That(asI2d.Perimeter, Is.EqualTo(12f));
+            Assert.That(asI2d.Area, Is.EqualTo(6f));
         }
 
         [Test]
@@ -89,6 +93,43 @@ namespace GeometryTests
 
             Assert.That(fromFloats, Is.EqualTo(fromPoints));
             Assert.Throws<ArgumentException>(() => new Triangle3(0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f));
+        }
+
+        [Test]
+        [Category("Triangle3")]
+        public void Triangle3_Centroid_Pass()
+        {
+            var triangle = new Triangle3(new Point3(0f, 0f, 0f), new Point3(6f, 0f, 0f), new Point3(0f, 3f, 0f));
+
+            Assert.That(triangle.Centroid, Is.EqualTo(new Point3(2f, 1f, 0f)));
+        }
+
+        [Test]
+        [Category("Triangle3")]
+        [TestCase(2f)]
+        [TestCase(0.5f)]
+        public void Triangle3_Scale_Pass(float scale)
+        {
+            var triangle = new Triangle3(new Point3(0f, 0f, 0f), new Point3(6f, 0f, 0f), new Point3(0f, 3f, 0f));
+            var centroid = triangle.Centroid;
+            var scaled = triangle.Scale(scale);
+
+            Assert.That(scaled.Centroid.X, Is.EqualTo(centroid.X).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(scaled.Centroid.Y, Is.EqualTo(centroid.Y).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(scaled.Centroid.Z, Is.EqualTo(centroid.Z).Within(Constants.FLOAT_ERROR_MARGIN));
+
+            Assert.That(scaled.A.X, Is.EqualTo(centroid.X + (triangle.A.X - centroid.X) * scale).Within(Constants.FLOAT_ERROR_MARGIN));
+        }
+
+        [Test]
+        [Category("Triangle3")]
+        [TestCase(0f)]
+        [TestCase(-1f)]
+        public void Triangle3_Scale_ThrowsForNonPositiveScale_Fail(float scale)
+        {
+            var triangle = new Triangle3(new Point3(0f, 0f, 0f), new Point3(6f, 0f, 0f), new Point3(0f, 3f, 0f));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => triangle.Scale(scale));
         }
 
         [Test]

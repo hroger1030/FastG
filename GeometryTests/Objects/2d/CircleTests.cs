@@ -165,6 +165,32 @@ namespace GeometryTests
         [Test]
         [Category("Circle")]
         [Category("Math")]
+        [TestCase(2f)]
+        [TestCase(0.5f)]
+        public void Circle_Scale_Pass(float scale)
+        {
+            var c1 = new Circle(3f, 4f, 2f);
+            var c2 = c1.Scale(scale);
+
+            Assert.That(c2.Center, Is.EqualTo(c1.Center));
+            Assert.That(c2.Radius, Is.EqualTo(2f * scale));
+        }
+
+        [Test]
+        [Category("Circle")]
+        [Category("Math")]
+        [TestCase(0f)]
+        [TestCase(-1f)]
+        public void Circle_Scale_ThrowsForNonPositiveScale_Fail(float scale)
+        {
+            var c = new Circle(0, 0, 2f);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => c.Scale(scale));
+        }
+
+        [Test]
+        [Category("Circle")]
+        [Category("Math")]
         public void Circle_CircleScaled_Pass()
         {
             var c1 = new Circle(0, 0, 2f);

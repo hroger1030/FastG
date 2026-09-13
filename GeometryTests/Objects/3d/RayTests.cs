@@ -30,7 +30,7 @@ namespace GeometryTests
         public void Ray_PointAt_Pass()
         {
             var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
-            Assert.That(ray.Direction.Length(), Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(ray.Direction.Length, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
             Assert.That(ray.PointAt(5f), Is.EqualTo(new Point3(0f, 0f, 0f)));
         }
 
@@ -68,7 +68,7 @@ namespace GeometryTests
             Assert.That(Ray.UNIT_RAY.Direction.X, Is.EqualTo(Constants.INV_SQRT_3).Within(Constants.FLOAT_ERROR_MARGIN));
             Assert.That(Ray.UNIT_RAY.Direction.Y, Is.EqualTo(Constants.INV_SQRT_3).Within(Constants.FLOAT_ERROR_MARGIN));
             Assert.That(Ray.UNIT_RAY.Direction.Z, Is.EqualTo(Constants.INV_SQRT_3).Within(Constants.FLOAT_ERROR_MARGIN));
-            Assert.That(Ray.UNIT_RAY.Direction.Length(), Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
+            Assert.That(Ray.UNIT_RAY.Direction.Length, Is.EqualTo(1f).Within(Constants.FLOAT_ERROR_MARGIN));
         }
 
         [Test]

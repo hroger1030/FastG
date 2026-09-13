@@ -1,18 +1,18 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2017 Roger Hill
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
-(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
-publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
@@ -134,47 +134,42 @@ namespace Geometry
         }
 
         /// <summary>
-        /// Returns true if point <paramref name="p"/> lies inside or on the faces of this cube.
+        /// Returns a copy of the cube scaled uniformly about its center. Calling this with a scale of 2 will
+        /// double the width, height and depth while keeping <see cref="Center"/> fixed.
+        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Contains(Point3 p) => Collisions3d.Contains(this, p);
+        public Cube Scale(float scale)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
+
+            var center = Center;
+            float halfWidth = Width * scale / 2f;
+            float halfHeight = Height * scale / 2f;
+            float halfDepth = Depth * scale / 2f;
+
+            return new Cube(
+                center.X - halfWidth, center.Y - halfHeight, center.Z - halfDepth,
+                center.X + halfWidth, center.Y + halfHeight, center.Z + halfDepth);
+        }
 
         /// <summary>
-        /// Returns true if (<paramref name="x"/>, <paramref name="y"/>, <paramref name="z"/>) lies inside or on the faces of this cube.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Contains(float x, float y, float z) => Contains(new Point3(x, y, z));
-
-        /// <summary>
-        /// Returns true if <paramref name="c"/> lies entirely inside or on this cube (i.e. the cube is fully enclosed).
-        /// Like the other containment tests, this assumes both cubes have X1 &lt;= X2, Y1 &lt;= Y2 and Z1 &lt;= Z2, so
-        /// enclosing the two extreme corners of <paramref name="c"/> is enough.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Contains(Cube c) => Collisions3d.Contains(this, c);
-
-        /// <summary>
-        /// Returns true if this cube overlaps or touches <paramref name="c"/> on all three axes.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Cube c) => Collisions3d.Intersects(this, c);
-
-        /// <summary>
-        /// Gets whether or not a specified <see cref="Sphere"/> intersects with this <see cref="Cube"/>.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Intersects(Sphere s) => Collisions3d.Intersects(this, s);
-
-        /// <summary>
-        /// Creates a new <see cref="Cube"/> that is scaled up from the X1,Y1,Z1 corner. Calling this with a scale of
-        /// 2 will double the width, height and depth while keeping X1,Y1,Z1 fixed.
+        /// Returns a copy of the cube scaled uniformly about its center. Calling this with a scale of 2 will
+        /// double the width, height and depth while keeping <see cref="Center"/> fixed.
+        /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Cube operator *(Cube c, float scale)
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
 
-            return new Cube(c.X1, c.Y1, c.Z1, c.X1 + (c.Width * scale), c.Y1 + (c.Height * scale), c.Z1 + (c.Depth * scale));
+            var center = c.Center;
+            float halfWidth = c.Width * scale / 2f;
+            float halfHeight = c.Height * scale / 2f;
+            float halfDepth = c.Depth * scale / 2f;
+
+            return new Cube(
+                center.X - halfWidth, center.Y - halfHeight, center.Z - halfDepth,
+                center.X + halfWidth, center.Y + halfHeight, center.Z + halfDepth);
         }
 
         /// <summary>
@@ -221,5 +216,55 @@ namespace Geometry
         {
             return $"Cube(P1: ({X1}, {Y1}, {Z1}), P2: ({X2}, {Y2}, {Z2}))";
         }
+
+        /// <summary>
+        /// Returns true if point <paramref name="p"/> lies inside or on the faces of this cube.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Point3 p) => Collisions3d.Contains(this, p);
+
+        /// <summary>
+        /// Returns true if (<paramref name="x"/>, <paramref name="y"/>, <paramref name="z"/>) lies inside or on the faces of this cube.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(float x, float y, float z) => Contains(new Point3(x, y, z));
+
+        /// <summary>
+        /// Returns true if <paramref name="c"/> lies entirely inside or on this cube (i.e. the cube is fully enclosed).
+        /// Like the other containment tests, this assumes both cubes have X1 &lt;= X2, Y1 &lt;= Y2 and Z1 &lt;= Z2, so
+        /// enclosing the two extreme corners of <paramref name="c"/> is enough.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains(Cube c) => Collisions3d.Contains(this, c);
+
+        /// <summary>
+        /// Returns true if this cube overlaps or touches <paramref name="c"/> on all three axes.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Cube c) => Collisions3d.Intersects(this, c);
+
+        /// <summary>
+        /// Gets whether or not a specified <see cref="Sphere"/> intersects with this <see cref="Cube"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Sphere s) => Collisions3d.Intersects(this, s);
+
+        /// <summary>
+        /// Returns true if this cube overlaps or touches <paramref name="aabb"/> on all three axes.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(AABB aabb) => Collisions3d.Intersects(aabb, this);
+
+        /// <summary>
+        /// Returns true if this cube overlaps or touches <paramref name="capsule"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Capsule capsule) => Collisions3d.Intersects(capsule, this);
+
+        /// <summary>
+        /// Returns true if this cube overlaps or touches <paramref name="cylinder"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Intersects(Cylinder cylinder) => Collisions3d.Intersects(this, cylinder);
     }
 }

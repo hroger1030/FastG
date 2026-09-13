@@ -18,6 +18,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Geometry;
 using NUnit.Framework;
+using System;
 
 namespace GeometryTests
 {
@@ -72,6 +73,33 @@ namespace GeometryTests
             Assert.That(Line2.UNIT_LINE.Point1, Is.EqualTo(Point2.ZERO));
             Assert.That(Line2.UNIT_LINE.Point2, Is.EqualTo(Point2.ONE));
             Assert.That(Line2.UNIT_LINE.Length, Is.EqualTo(Constants.SQRT_2).Within(Constants.FLOAT_ERROR_MARGIN));
+        }
+
+        [Test]
+        [Category("Line2")]
+        [TestCase(2f)]
+        [TestCase(0.5f)]
+        public void Line2_Scale_Pass(float scale)
+        {
+            var line = new Line2(new Point2(0f, 0f), new Point2(4f, 0f));
+            var scaled = line.Scale(scale);
+
+            Assert.That(scaled.Length, Is.EqualTo(4f * scale).Within(Constants.FLOAT_ERROR_MARGIN));
+
+            float midX = (line.Point1.X + line.Point2.X) / 2f;
+            float scaledMidX = (scaled.Point1.X + scaled.Point2.X) / 2f;
+            Assert.That(scaledMidX, Is.EqualTo(midX).Within(Constants.FLOAT_ERROR_MARGIN));
+        }
+
+        [Test]
+        [Category("Line2")]
+        [TestCase(0f)]
+        [TestCase(-1f)]
+        public void Line2_Scale_ThrowsForNonPositiveScale_Fail(float scale)
+        {
+            var line = new Line2(new Point2(0f, 0f), new Point2(4f, 0f));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => line.Scale(scale));
         }
 
         [Test]

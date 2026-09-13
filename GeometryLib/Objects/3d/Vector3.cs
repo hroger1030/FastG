@@ -20,7 +20,7 @@ using System.Runtime.CompilerServices;
 
 namespace Geometry
 {
-    public readonly struct Vector3 : IEquatable<Vector3>
+    public readonly struct Vector3 : I1d, IEquatable<Vector3>
     {
         /// <summary>
         /// A vector with all components set to zero.
@@ -145,7 +145,7 @@ namespace Geometry
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Normalize(Vector3 v1)
         {
-            var length = v1.Length();
+            var length = v1.Length;
 
             if (length == 0)
                 throw new DivideByZeroException("Cannot normalize a vector when it's magnitude is zero");
@@ -203,17 +203,23 @@ namespace Geometry
         }
 
         /// <summary>
-        /// Returns the squared magnitude of this vector. Cheaper than <see cref="Length"/> (no square root);
+        /// The squared magnitude of this vector. Cheaper than <see cref="Length"/> (no square root);
         /// prefer it when comparing magnitudes or testing against a squared threshold.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float LengthSquared() => (X * X) + (Y * Y) + (Z * Z);
+        public float LengthSquared
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (X * X) + (Y * Y) + (Z * Z);
+        }
 
         /// <summary>
-        /// Returns the magnitude (Euclidean length) of this vector.
+        /// The magnitude (Euclidean length) of this vector.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float Length() => MathF.Sqrt(LengthSquared());
+        public float Length
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => MathF.Sqrt(LengthSquared);
+        }
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Vector3"/> with the same components.

@@ -82,6 +82,7 @@ namespace GeometryTests
             Assert.That(scaled.Width, Is.EqualTo(2f));
             Assert.That(scaled.Height, Is.EqualTo(2f));
             Assert.That(scaled.Depth, Is.EqualTo(2f));
+            Assert.That(scaled.Center, Is.EqualTo(cube.Center), "Failed to stay centered on the same point");
         }
 
         [Test]
@@ -91,6 +92,29 @@ namespace GeometryTests
             var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
 
             Assert.Throws<ArgumentOutOfRangeException>(() => { var result = cube * -1f; });
+        }
+
+        [Test]
+        [Category("Cube")]
+        public void Cube_Scale_Pass()
+        {
+            var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
+            var scaled = cube.Scale(2f);
+
+            Assert.That(scaled.Width, Is.EqualTo(2f));
+            Assert.That(scaled.Height, Is.EqualTo(2f));
+            Assert.That(scaled.Depth, Is.EqualTo(2f));
+            Assert.That(scaled.Center, Is.EqualTo(cube.Center), "Failed to stay centered on the same point");
+        }
+
+        [Test]
+        [Category("Cube")]
+        public void Cube_Scale_ThrowsForNonPositiveScale_Fail()
+        {
+            var cube = new Cube(0f, 0f, 0f, 1f, 1f, 1f);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => cube.Scale(0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => cube.Scale(-1f));
         }
 
         [Test]

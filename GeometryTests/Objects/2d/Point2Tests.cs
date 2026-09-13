@@ -161,6 +161,29 @@ namespace GeometryTests
             Assert.That(self.X, Is.EqualTo(0f));
             Assert.That(self.Y, Is.EqualTo(0f));
         }
+
+        [Test]
+        [Category("Point2")]
+        public void Point2_RotateAround_Pass()
+        {
+            var point = new Point2(1f, 0f);
+            var pivot = Point2.ZERO;
+
+            var quarterTurn = point.RotateAround(pivot, Constants.HALF_PI);
+            Assert.That(quarterTurn.X, Is.EqualTo(0f).Within(1e-5f));
+            Assert.That(quarterTurn.Y, Is.EqualTo(1f).Within(1e-5f));
+
+            // rotating about a point other than the origin
+            var offCenter = new Point2(2f, 1f).RotateAround(new Point2(1f, 1f), Constants.HALF_PI);
+            Assert.That(offCenter.X, Is.EqualTo(1f).Within(1e-5f));
+            Assert.That(offCenter.Y, Is.EqualTo(2f).Within(1e-5f));
+
+            // rotating a point about itself never moves it
+            var self = point.RotateAround(point, 1.2345f);
+            Assert.That(self, Is.EqualTo(point));
+
+            Assert.That(Point2.RotateAround(point, pivot, Constants.HALF_PI), Is.EqualTo(quarterTurn));
+        }
     }
 }
 

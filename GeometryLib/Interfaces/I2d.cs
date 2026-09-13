@@ -3,7 +3,7 @@
     /// <summary>
     /// Implemented by two-dimensional shapes that have a measurable perimeter and area.
     /// </summary>
-    interface I2d
+    public interface I2d
     {
         /// <summary>
         /// The length of the shape's boundary.

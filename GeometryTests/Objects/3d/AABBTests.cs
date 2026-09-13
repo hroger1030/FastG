@@ -63,6 +63,27 @@ namespace GeometryTests
 
         [Test]
         [Category("AABB")]
+        public void AABB_Scale_Pass()
+        {
+            var box = new AABB(new Point3(0f, 0f, 0f), new Point3(2f, 2f, 2f));
+            var scaled = box.Scale(2f);
+
+            Assert.That(scaled.Min, Is.EqualTo(new Point3(-1f, -1f, -1f)));
+            Assert.That(scaled.Max, Is.EqualTo(new Point3(3f, 3f, 3f)));
+        }
+
+        [Test]
+        [Category("AABB")]
+        public void AABB_Scale_ThrowsForNonPositiveScale_Fail()
+        {
+            var box = new AABB(new Point3(0f, 0f, 0f), new Point3(2f, 2f, 2f));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => box.Scale(0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => box.Scale(-1f));
+        }
+
+        [Test]
+        [Category("AABB")]
         public void AABB_ToString_Pass()
         {
             var box = new AABB(0f, 0f, 0f, 1f, 2f, 3f);
