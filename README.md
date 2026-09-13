@@ -162,8 +162,6 @@ Every shape is an immutable value type (`readonly struct`), no exceptions; see
   flat (zero volume), so `I2d` is the honest fit, not `I3d`.
 - I3d — a measurable `Volume` and `SurfaceArea`. Implemented by every solid 3D shape (`Sphere`, `Cube`, `AABB`,
   `Capsule`, `Cylinder`).
-- Deliberately **not** implemented anywhere: `Point2`/`Point3` (zero-dimensional; no length, area, or volume
-  to report) and `Ray`/`Plane3` (unbounded, so there's no finite value `I3d` could return).
 
 ## Value types and reference types
 
@@ -187,18 +185,11 @@ What this means when you use them:
   tight collision loop, does not allocate. This is the main reason for the conversion.
 
 `Vector2`/`Vector3` used to have an in-place `Normalize()` that mutated the instance; it now returns a
-unit-length copy (`v = v.Normalize();`). `Polygon` used to have public mutating helpers too (its vertex
-list could be edited in place); it's now immutable like everything else, so the `+`/`-`/`*`/`/` operators
-and the `Scale(float)` method (see below) are the only ways to get a changed copy.
+unit-length copy (`v = v.Normalize();`). 
 
 Most shapes also expose a `Scale(float scale)` method — a single uniform scale factor, applied about the
-shape's own center/centroid rather than the origin, and guarded against a zero or negative factor
-(`ArgumentOutOfRangeException`). It's implemented on `Polygon`, `AARectangle`, `Circle`, `Ellipse`, `Line2`,
-`Triangle2`, `Triangle3`, `Sphere`, `Cube`, `AABB`, `Capsule`, and `Cylinder`. Four of those
-(`Polygon`, `AARectangle`, `Circle`, `Cube`) also have `*`/`/` scaling operators for the same
-operation — those operators are thin wrappers around `Scale()`, not a separate implementation, so
-there's exactly one place the scaling math lives per shape. The rest expose only the named method,
-with no operator equivalent.
+shape's own center/centroid rather than the origin. It's implemented on `Polygon`, `AARectangle`, 
+`Circle`, `Ellipse`, `Line2`, `Triangle2`, `Triangle3`, `Sphere`, `Cube`, `AABB`, `Capsule`, and `Cylinder`. 
 
 ## Performance
 
