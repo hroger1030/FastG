@@ -122,12 +122,7 @@ namespace Geometry
         /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Circle operator *(Circle c, float scale)
-        {
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
-
-            return new Circle(c.Center.X, c.Center.Y, c.Radius * scale);
-        }
+        public static Circle operator *(Circle c, float scale) => c.Scale(scale);
 
         /// <summary>
         /// Returns a copy of the circle with its radius divided by <paramref name="scale"/> (center unchanged).
@@ -138,7 +133,7 @@ namespace Geometry
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
 
-            return new Circle(c.Center.X, c.Center.Y, c.Radius / scale);
+            return c.Scale(1f / scale);
         }
 
         /// <summary>

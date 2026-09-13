@@ -74,7 +74,8 @@ Geometry/
 │       │   ├── Ellipse.cs
 │       │   ├── Triangle2.cs
 │       │   ├── AARectangle.cs
-│       │   └── Polygon.cs
+│       │   ├── Polygon.cs
+│       │   └── Collisions2d.cs     # every 2D Intersects/Contains pair - see Objects below
 │       ├── 3d/
 │       │   ├── Point3.cs
 │       │   ├── Vector3.cs
@@ -85,7 +86,8 @@ Geometry/
 │       │   ├── Cube.cs
 │       │   ├── AABB.cs
 │       │   ├── Capsule.cs
-│       │   └── Cylinder.cs
+│       │   ├── Cylinder.cs
+│       │   └── Collisions3d.cs     # every 3D Intersects/Contains pair, plus all Ray casts
 │       └── Nd/
 │           └── VectorN.cs
 └── GeometryTests/                  # NUnit test project (namespace: GeometryTests)
@@ -118,6 +120,10 @@ Every shape is an immutable value type (`readonly struct`), no exceptions; see
 - Constants — `FLOAT_ERROR_MARGIN`, the PI family (`PI`, `TWO_PI`/`TAU`, `HALF_PI`, `QUARTER_PI`), `DEG_TO_RAD`/`RAD_TO_DEG`,
   `SQRT_2`/`SQRT_3`, and their precomputed reciprocals (`INV_PI`, `INV_TWO_PI`, `INV_HALF_PI`, `INV_SQRT_2`,
   `INV_SQRT_3`) — see [Performance](#performance).
+- `Collisions2d`/`Collisions3d` — every pairwise `Intersects`/`Contains` check (including all `Ray` casts)
+  lives here exactly once, keyed by the two shape types involved. The matching instance methods on the
+  shapes themselves (e.g. `Circle.Intersects(AARectangle)`) are thin forwarders kept for call-site
+  convenience, not separate implementations - so there's one place to fix a bug in any given shape pair.
 
 ### 2D (`GeometryLib/Objects/2d`)
 
@@ -187,9 +193,12 @@ and the `Scale(float)` method (see below) are the only ways to get a changed cop
 
 Most shapes also expose a `Scale(float scale)` method — a single uniform scale factor, applied about the
 shape's own center/centroid rather than the origin, and guarded against a zero or negative factor
-(`ArgumentOutOfRangeException`). It's a clearer alternative to the `*`/`/` operators for that one
-operation, and is implemented on `Polygon`, `AARectangle`, `Circle`, `Ellipse`, `Line2`, `Triangle2`,
-`Triangle3`, `Sphere`, `Cube`, `AABB`, `Capsule`, and `Cylinder`.
+(`ArgumentOutOfRangeException`). It's implemented on `Polygon`, `AARectangle`, `Circle`, `Ellipse`, `Line2`,
+`Triangle2`, `Triangle3`, `Sphere`, `Cube`, `AABB`, `Capsule`, and `Cylinder`. Four of those
+(`Polygon`, `AARectangle`, `Circle`, `Cube`) also have `*`/`/` scaling operators for the same
+operation — those operators are thin wrappers around `Scale()`, not a separate implementation, so
+there's exactly one place the scaling math lives per shape. The rest expose only the named method,
+with no operator equivalent.
 
 ## Performance
 

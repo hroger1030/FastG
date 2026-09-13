@@ -158,19 +158,7 @@ namespace Geometry
         /// Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/> is zero or negative.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Cube operator *(Cube c, float scale)
-        {
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
-
-            var center = c.Center;
-            float halfWidth = c.Width * scale / 2f;
-            float halfHeight = c.Height * scale / 2f;
-            float halfDepth = c.Depth * scale / 2f;
-
-            return new Cube(
-                center.X - halfWidth, center.Y - halfHeight, center.Z - halfDepth,
-                center.X + halfWidth, center.Y + halfHeight, center.Z + halfDepth);
-        }
+        public static Cube operator *(Cube c, float scale) => c.Scale(scale);
 
         /// <summary>
         /// Returns true if <paramref name="obj"/> is a <see cref="Cube"/> with the same six coordinates.

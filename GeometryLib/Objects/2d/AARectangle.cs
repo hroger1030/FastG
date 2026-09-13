@@ -237,7 +237,7 @@ namespace Geometry
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
 
-            return r * (1 / scale);
+            return r.Scale(1f / scale);
         }
 
         /// <summary>

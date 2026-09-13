@@ -201,21 +201,7 @@ namespace Geometry
         /// by <paramref name="scale"/>. Throws <see cref="ArgumentOutOfRangeException"/> if <paramref name="scale"/>
         /// is zero or negative.
         /// </summary>
-        public static Polygon operator *(Polygon p, float scale)
-        {
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
-
-            var centroid = p.Centroid;
-            var source = p.Vertices;
-            var result = new Point2[source.Length];
-
-            for (int i = 0; i < source.Length; i++)
-                result[i] = new Point2(
-                    centroid.X + (source[i].X - centroid.X) * scale,
-                    centroid.Y + (source[i].Y - centroid.Y) * scale);
-
-            return new Polygon(result);
-        }
+        public static Polygon operator *(Polygon p, float scale) => p.Scale(scale);
 
         /// <summary>
         /// Creates a new <see cref="Polygon"/> with every vertex scaled about the polygon's <see cref="Centroid"/>
@@ -226,7 +212,7 @@ namespace Geometry
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(scale, 0f);
 
-            return p * (1f / scale);
+            return p.Scale(1f / scale);
         }
 
         /// <summary>
