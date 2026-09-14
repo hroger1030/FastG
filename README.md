@@ -1,9 +1,9 @@
-# Geometry
+# FastG
 
-A lightweight 2D/3D/nD geometry library written in C# for games and other applications that don't need
-high-precision math. It favors speed and simplicity over precision — values are stored as `float`, so this
-is **not** a good fit for serious scientific or CAD-grade math. It is, however, fast, easy to use, and easy
-to extend with new shapes.
+The FastG ("Fast Geometry") library is designed to provide blazing fast math and geometry structures for
+games and simulations where speed is important. It favors speed and simplicity over precision — values are
+stored as `float`, so this is **not** a good fit for serious scientific or CAD-grade math. It is, however,
+fast, easy to use, and easy to extend with new shapes.
 
 Every shape is an **immutable value type** (`readonly struct`). Passing a shape around, reading its
 `.Center`, or building one per frame costs no heap allocation and produces no garbage. See
@@ -20,18 +20,18 @@ soon as possible.
 
 ## Table of contents
 
-- [Geometry](#geometry)
+- [FastG](#fastg)
   - [Table of contents](#table-of-contents)
   - [Solution layout](#solution-layout)
   - [File tree](#file-tree)
   - [Requirements](#requirements)
   - [Building and testing](#building-and-testing)
   - [Objects](#objects)
-    - [Shared (`GeometryLib/Objects`)](#shared-geometrylibobjects)
-    - [2D (`GeometryLib/Objects/2d`)](#2d-geometrylibobjects2d)
-    - [3D (`GeometryLib/Objects/3d`)](#3d-geometrylibobjects3d)
-    - [Higher dimension (`GeometryLib/Objects/Nd`)](#higher-dimension-geometrylibobjectsnd)
-    - [Interfaces (`GeometryLib/Interfaces`)](#interfaces-geometrylibinterfaces)
+    - [Shared (`FastG/Objects`)](#shared-fastgobjects)
+    - [2D (`FastG/Objects/2d`)](#2d-fastgobjects2d)
+    - [3D (`FastG/Objects/3d`)](#3d-fastgobjects3d)
+    - [Higher dimension (`FastG/Objects/Nd`)](#higher-dimension-fastgobjectsnd)
+    - [Interfaces (`FastG/Interfaces`)](#interfaces-fastginterfaces)
   - [Value types and reference types](#value-types-and-reference-types)
   - [Performance](#performance)
   - [Code examples](#code-examples)
@@ -45,8 +45,8 @@ soon as possible.
 
 | Project | Description |
 |---|---|
-| [GeometryLib](GeometryLib) | The library itself. Namespace: `Geometry`. |
-| [GeometryTests](GeometryTests) | NUnit test suite for the library, mirroring the `Objects` folder structure. |
+| [FastG](FastG) | The library itself. Namespace: `FastG`. |
+| [FastGTests](FastGTests) | NUnit test suite for the library, mirroring the `Objects` folder structure. Namespace: `FastGTests`. |
 
 ## File tree
 
@@ -54,12 +54,12 @@ Only the files that matter for using or extending the library are listed below; 
 (`bin`/`obj`) and IDE folders are omitted.
 
 ```
-Geometry/
-├── Geometry.sln
+FastGLibrary/
+├── FastGLibrary.sln
 ├── LICENSE.txt
 ├── CLAUDE.md
-├── GeometryLib/                    # Library project (namespace: Geometry)
-│   ├── Geometry.csproj
+├── FastG/                          # Library project (namespace: FastG)
+│   ├── FastG.csproj
 │   ├── Interfaces/
 │   │   ├── I1d.cs
 │   │   ├── I2d.cs
@@ -90,9 +90,9 @@ Geometry/
 │       │   └── Collisions3d.cs     # every 3D Intersects/Contains pair, plus all Ray casts
 │       └── Nd/
 │           └── VectorN.cs
-└── GeometryTests/                  # NUnit test project (namespace: GeometryTests)
-    ├── GeometryTests.csproj
-    └── Objects/                    # Mirrors GeometryLib/Objects/
+└── FastGTests/                     # NUnit test project (namespace: FastGTests)
+    ├── FastGTests.csproj
+    └── Objects/                    # Mirrors FastG/Objects/
         ├── 2d/
         ├── 3d/
         └── Nd/
@@ -115,7 +115,7 @@ dotnet test
 Every shape is an immutable value type (`readonly struct`), no exceptions; see
 [Value types and reference types](#value-types-and-reference-types).
 
-### Shared (`GeometryLib/Objects`)
+### Shared (`FastG/Objects`)
 
 - Constants — `FLOAT_ERROR_MARGIN`, the PI family (`PI`, `TWO_PI`/`TAU`, `HALF_PI`, `QUARTER_PI`), `DEG_TO_RAD`/`RAD_TO_DEG`,
   `SQRT_2`/`SQRT_3`, and their precomputed reciprocals (`INV_PI`, `INV_TWO_PI`, `INV_HALF_PI`, `INV_SQRT_2`,
@@ -125,7 +125,7 @@ Every shape is an immutable value type (`readonly struct`), no exceptions; see
   shapes themselves (e.g. `Circle.Intersects(AARectangle)`) are thin forwarders kept for call-site
   convenience, not separate implementations - so there's one place to fix a bug in any given shape pair.
 
-### 2D (`GeometryLib/Objects/2d`)
+### 2D (`FastG/Objects/2d`)
 
 - Point2
 - Vector2
@@ -136,7 +136,7 @@ Every shape is an immutable value type (`readonly struct`), no exceptions; see
 - AARectangle
 - Polygon
 
-### 3D (`GeometryLib/Objects/3d`)
+### 3D (`FastG/Objects/3d`)
 
 - Point3
 - Vector3
@@ -149,11 +149,11 @@ Every shape is an immutable value type (`readonly struct`), no exceptions; see
 - Capsule
 - Cylinder
 
-### Higher dimension (`GeometryLib/Objects/Nd`)
+### Higher dimension (`FastG/Objects/Nd`)
 
 - VectorN
 
-### Interfaces (`GeometryLib/Interfaces`)
+### Interfaces (`FastG/Interfaces`)
 
 - I1d — a measurable `Length`. Implemented by `Line2`, `Vector2`, `Vector3` (the latter two explicitly satisfy
   it through the interface, since each already has its own `Length` used directly).
@@ -206,7 +206,7 @@ for tight, per-frame call sites — collision loops, per-vertex transforms, that
   has warmed up. It's deliberately *not* applied to anything with a loop (`VectorN`, `Polygon`) or with
   many branches (SAT-style triangle tests, the closed-form ray-cast solvers) — inlining those would
   bloat call sites without buying anything.
-- **Precomputed constants instead of runtime division.** [`Constants`](GeometryLib/Objects/Constants.cs)
+- **Precomputed constants instead of runtime division.** [`Constants`](FastG/Objects/Constants.cs)
   provides `PI`/`TWO_PI`/`HALF_PI`/`QUARTER_PI`, `DEG_TO_RAD`/`RAD_TO_DEG`, `SQRT_2`/`SQRT_3`, and their
   reciprocals (`INV_PI`, `INV_TWO_PI`, `INV_HALF_PI`, `INV_SQRT_2`, `INV_SQRT_3`) as compile-time
   `const float`s. A multiply is cheaper than a divide on most hardware, so prefer `x * Constants.INV_PI`
@@ -220,7 +220,7 @@ existing code keeps working unchanged.
 ### 2D: points, vectors, and circles
 
 ```csharp
-using Geometry;
+using FastG;
 
 // Points and vectors
 var start = new Point2(0f, 0f);
@@ -252,7 +252,7 @@ Polygon same = triangle.Scale(2f);    // Scale(float) does the same thing, just 
 ### 3D: bounding volumes
 
 ```csharp
-using Geometry;
+using FastG;
 
 var sphere = new Sphere(new Point3(0f, 0f, 0f), radius: 5f);
 bool hit = sphere.Contains(new Point3(1f, 2f, 3f));
@@ -288,7 +288,7 @@ float capsuleVolume = capsule.Volume; // cylinder body + a full sphere from the 
 parameter to declare inline. On a miss, `Distance` is `0`.
 
 ```csharp
-using Geometry;
+using FastG;
 
 var ray = new Ray(new Point3(0f, 0f, -5f), new Vector3(0f, 0f, 1f));
 var sphere = new Sphere(new Point3(0f, 0f, 0f), radius: 1f);
@@ -305,7 +305,7 @@ bool hitsCylinder = ray.Intersects(cylinder).Hit; // discard the distance if you
 ### nD: arbitrary-dimension vectors
 
 ```csharp
-using Geometry;
+using FastG;
 
 var v1 = new VectorN([1f, 2f, 3f, 4f]);
 var v2 = new VectorN([4f, 3f, 2f, 1f]);
