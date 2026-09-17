@@ -16,11 +16,41 @@ Every shape is an immutable value type (readonly struct), so building one per fr
 
 Coordinates are stored as float — the library trades precision for speed and is not intended for CAD or scientific computing. AARectangle, Cube, and AABB are axis-aligned (no rotation).
 
-MIT licensed.</Description> 
+MIT licensed.</Description>
+    <Company>GamrTable</Company>
+    <Copyright>Copyright 2017, Roger Hill</Copyright>
+    <PackageProjectUrl>https://github.com/hroger1030/FastG</PackageProjectUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>geometry;games;performance;dotnet</PackageTags>
+    <PackageReleaseNotes>Refactor and rebrand of Geometry library - 
+tuned for speed and perf as #1 goal.</PackageReleaseNotes>
+    <PackAsTool>True</PackAsTool>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Authors>Roger_Hill</Authors> 
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

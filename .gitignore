@@ -24,5 +24,8 @@ TestResult.xml
 *.log
 *.tmp
 
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
 /.github/copilot-instructions.md
 /CLAUDE.md
