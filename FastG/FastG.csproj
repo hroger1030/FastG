@@ -6,10 +6,10 @@
     <Nullable>disable</Nullable>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <Title>FastG (Fast Geometry) Library</Title>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <AssemblyVersion>3.0.1</AssemblyVersion>
+    <FileVersion>3.0.1</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.0.0.0</Version>
+    <Version>3.0.1</Version>
     <Description>FastG ("Fast Geometry"): a small, fast geometry library for games and real-time applications: points, vectors, rectangles, circles, ellipses, triangles, polygons, rays, planes, spheres, cubes, AABBs, capsules, cylinders, and N-dimensional vectors.
 
 Every shape is an immutable value type (readonly struct), so building one per frame or running thousands of intersection tests in a tight loop allocates nothing and adds no GC pressure. Shapes carry value equality (==, Equals, GetHashCode) and work correctly as dictionary keys. Includes intersection and containment tests, distances, area / volume / perimeter, and arithmetic operators.
@@ -26,7 +26,7 @@ MIT licensed.</Description>
     <PackageTags>geometry;games;performance;dotnet</PackageTags>
     <PackageReleaseNotes>Refactor and rebrand of Geometry library - 
 tuned for speed and perf as #1 goal.</PackageReleaseNotes>
-    <PackAsTool>True</PackAsTool>
+    <PackAsTool>False</PackAsTool>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Authors>Roger_Hill</Authors> 
   </PropertyGroup>
